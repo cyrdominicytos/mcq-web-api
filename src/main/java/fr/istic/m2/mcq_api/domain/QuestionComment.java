@@ -14,6 +14,7 @@ public class QuestionComment {
     private Long id;
     @ManyToOne
     private Question question;
+    private String suggestion;
     private boolean isAccepted = false;
     private LocalDateTime creationDate;
     private LocalDateTime updatedDate;
