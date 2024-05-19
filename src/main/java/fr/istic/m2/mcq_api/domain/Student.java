@@ -1,8 +1,6 @@
 package fr.istic.m2.mcq_api.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -14,9 +12,10 @@ import java.util.List;
 @Data
 @Entity
 public class Student extends User {
-    private String lastFieldOfStudy;
-    private String lastClassOfStudy;
-
     @OneToMany(mappedBy = "student")
     List<StudentTest> studentTestList = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "level_id")
+    Level studentLevel;
 }

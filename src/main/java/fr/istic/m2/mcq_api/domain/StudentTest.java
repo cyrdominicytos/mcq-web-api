@@ -26,6 +26,7 @@ public class StudentTest {
     @JoinColumn(name = "student_id")
     private Student student;
 
+    //TODO : add qcm relation
     /*@ManyToOne
     @JoinColumn(name = "qcm_id")
     private Qcm qcm;*/

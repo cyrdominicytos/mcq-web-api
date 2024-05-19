@@ -1,5 +1,4 @@
-package fr.istic.science;
-
+package fr.istic.m2.mcq_api.security;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -10,6 +9,10 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author Cyriaque TOSSOU, Tuo Adama
+ * The class to configure openAPI documentation, to describe the REST API.
+ */
 @Configuration
 public class SwaggerConfig {
     @Bean
@@ -22,7 +25,7 @@ public class SwaggerConfig {
     @Bean
     OpenAPI customOpenAPIO() {
             return new OpenAPI()
-                    .info(new Info().title("Fete de la science - API").version("1.0"))
+                    .info(new Info().title("QCM APP - API").version("1.0"))
                     .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                     .components(
                             new Components()

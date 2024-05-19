@@ -23,6 +23,7 @@ public class StudentTestAnswer {
     @JoinColumn(name = "student_test_id")
     private StudentTest studentTest;
 
+    //TODO : add answer relation
     /*@ManyToOne
     @JoinColumn(name = "answer_id")
     private Answer answer;*/
