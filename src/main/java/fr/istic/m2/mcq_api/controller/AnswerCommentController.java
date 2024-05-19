@@ -4,7 +4,6 @@ import fr.istic.m2.mcq_api.domain.AnswerComment;
 import fr.istic.m2.mcq_api.dto.AnswerCommentDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.AnswerCommentService;
-import fr.istic.m2.mcq_api.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
