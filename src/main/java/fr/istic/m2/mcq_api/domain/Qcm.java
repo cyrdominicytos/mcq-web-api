@@ -7,13 +7,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Entity
 public class Qcm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     private Level level;
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "qcm",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Question> questions;
     private int limitQuestion;
     private boolean isActive;

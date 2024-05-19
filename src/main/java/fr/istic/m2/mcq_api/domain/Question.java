@@ -1,21 +1,28 @@
 package fr.istic.m2.mcq_api.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
+@Entity
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToMany(mappedBy = "question")
+    private List<Answer> answers = new ArrayList<>();
+    @OneToMany(mappedBy = "question")
+    private List<QuestionComment> comments = new ArrayList<>();
+    @ManyToOne
+    private Qcm qcm;
     private String title;
-    private Integer level;
+    private int level;
     private boolean isActive;
-    private Integer delay;
+    private int delay;
     private LocalDateTime  creationDate;
     private LocalDateTime  updatedDate;
 }

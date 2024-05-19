@@ -5,15 +5,15 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-
 @Data
 @Entity
-public class QuestionComment {
+public class AnswerComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private Question question;
+    private Answer answer;
+    private String suggestion;
     private boolean isAccepted = false;
     private LocalDateTime creationDate;
     private LocalDateTime updatedDate;
