@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class AnswerCommentDTO {
-    private int answerId;
+    private Long answerId;
     private String suggestion;
     private boolean isAccepted;
 }

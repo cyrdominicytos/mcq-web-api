@@ -42,6 +42,7 @@ public class AnswerCommentController {
     }
     @DeleteMapping("/delete/{id}")
     public @ResponseBody ResponseEntity<Void> delete(@PathVariable Long id){
+        this.commentService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
