@@ -30,7 +30,7 @@ public class QuestionCommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public @ResponseBody ResponseEntity<QuestionComment> update(@PathVariable Long id, @RequestBody QuestionCommentDTO questionCommentDTO){
         QuestionComment comment = this.commentService.update(id, questionCommentDTO);
         return ResponseEntity.status(HttpStatus.OK).body(comment);

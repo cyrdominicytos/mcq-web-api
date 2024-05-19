@@ -35,7 +35,7 @@ public class AnswerCommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public @ResponseBody ResponseEntity<AnswerComment> update(@PathVariable Long id, @RequestBody AnswerCommentDTO answerCommentDTO){
         AnswerComment comment = this.commentService.update(id, answerCommentDTO);
         return ResponseEntity.status(HttpStatus.OK).body(comment);

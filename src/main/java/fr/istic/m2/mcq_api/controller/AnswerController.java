@@ -30,7 +30,7 @@ public class AnswerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(answer);
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public @ResponseBody ResponseEntity<Answer> update(@PathVariable Long id, @RequestBody AnswerDTO answerDTO){
         Answer answer = this.answerService.update(id, answerDTO);
         return ResponseEntity.status(HttpStatus.OK).body(answer);
