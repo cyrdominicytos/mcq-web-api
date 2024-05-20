@@ -18,7 +18,7 @@ public class Answer {
     @ManyToOne
     private Question question;
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
-    private List<TestAnswer> testAnswers = new ArrayList<>();
+    private List<StudentTestAnswer> studentTestAnswers = new ArrayList<>();
     private boolean isValid;
     private int nbrPoint;
     private LocalDateTime creationDate;

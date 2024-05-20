@@ -13,5 +13,6 @@ public class StudentTestListDto {
     private LocalDateTime updatedDate;
 
     private StudentListDto student;
-   //TODO : private QcmListDto qcm;
+    private QcmListDTO qcm;
+
 }

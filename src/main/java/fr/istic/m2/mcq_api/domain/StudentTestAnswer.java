@@ -19,13 +19,12 @@ public class StudentTestAnswer {
     private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_test_id")
     private StudentTest studentTest;
 
-    //TODO : add answer relation
-    /*@ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "answer_id")
-    private Answer answer;*/
+    private Answer answer;
 
 }

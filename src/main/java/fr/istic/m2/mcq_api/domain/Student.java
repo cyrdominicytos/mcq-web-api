@@ -12,10 +12,10 @@ import java.util.List;
 @Data
 @Entity
 public class Student extends User {
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     List<StudentTest> studentTestList = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "level_id")
     Level studentLevel;
 }

@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 public class StudentTestDto {
     private LocalDateTime startingDate;
     private LocalDateTime endDate;
-    private Long student_id;
-    private Long qcm_id;
+    private Long studentId;
+    private Long qcmId;
 }

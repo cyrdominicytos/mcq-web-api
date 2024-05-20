@@ -22,16 +22,15 @@ public class StudentTest {
     private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     private Student student;
 
-    //TODO : add qcm relation
-    /*@ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "qcm_id")
-    private Qcm qcm;*/
+    private Qcm qcm;
 
-    @OneToMany(mappedBy = "studentTest")
+    @OneToMany(mappedBy = "studentTest", cascade = CascadeType.ALL)
     private List<StudentTestAnswer> studentTestAnswer = new ArrayList<>();
 
 }

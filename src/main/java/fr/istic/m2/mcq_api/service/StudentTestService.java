@@ -1,11 +1,16 @@
 package fr.istic.m2.mcq_api.service;
 
+import fr.istic.m2.mcq_api.domain.Level;
+import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Student;
 import fr.istic.m2.mcq_api.domain.StudentTest;
+import fr.istic.m2.mcq_api.dto.QcmDTO;
+import fr.istic.m2.mcq_api.dto.QcmListDTO;
 import fr.istic.m2.mcq_api.dto.StudentTestDto;
 import fr.istic.m2.mcq_api.dto.StudentTestListDto;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.LevelRepository;
+import fr.istic.m2.mcq_api.repository.QcmRepository;
 import fr.istic.m2.mcq_api.repository.StudentRepository;
 import fr.istic.m2.mcq_api.repository.StudentTestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Cyriaque TOSSOU, Tuo Adama
@@ -25,19 +31,12 @@ public class StudentTestService {
     private StudentTestRepository studentTestRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private QcmRepository qcmRepository;
     public StudentTestListDto createStudentTest(StudentTestDto studentTestDto) {
-        Student student =  studentRepository.findById(studentTestDto.getStudent_id())
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentTestDto.getStudent_id()));
-        //TODO  : Add qcm checking
-
-
-        StudentTest studentTest = new StudentTest();
-        studentTest.setStudent(student);
-        //TODO :  qcm to  studentTest
-        studentTest.setStartingDate(studentTest.getStartingDate());
-        studentTest.setEndDate(studentTest.getEndDate());
-        StudentTest result =  studentTestRepository.save(studentTest);
-        return  convertToStudentTestList(result);
+        StudentTest studentTest  = this.format(studentTestDto, null);
+        studentTestRepository.saveAndFlush(studentTest);
+        return  convertToStudentTestList(studentTest);
     }
 
     public StudentTestListDto getStudentTestById(Long studentTestId) {
@@ -55,19 +54,10 @@ public class StudentTestService {
     }
 
     public StudentTestListDto updateStudentTest(Long studentTestId, StudentTestDto studentTestDto) {
-        StudentTest studentTest = studentTestRepository.findById(studentTestId)
-                .orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestId));
-
-        Student student =  studentRepository.findById(studentTestDto.getStudent_id())
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentTestDto.getStudent_id()));
-        //TODO  : Add qcm checking
-        studentTest.setStudent(student);
-        //TODO :  qcm to  studentTest
-        studentTest.setStartingDate(studentTest.getStartingDate());
-        studentTest.setEndDate(studentTest.getEndDate());
-        studentTest.setUpdatedDate(LocalDateTime.now());
-        StudentTest result =  studentTestRepository.save(studentTest);
-        return  convertToStudentTestList(result);
+        StudentTest studentTest = studentTestRepository.findById(studentTestId).orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestId));
+        studentTest = this.format(studentTestDto, studentTest);
+        studentTestRepository.saveAndFlush(studentTest);
+        return  convertToStudentTestList(studentTest);
     }
 
     public void deleteStudentTest(Long studentTestId) {
@@ -81,6 +71,26 @@ public class StudentTestService {
         result.setCreationDate(source.getCreationDate());
         result.setUpdatedDate(source.getUpdatedDate());
         result.setStudent(StudentService.convertToStudentList(source.getStudent()));
+        result.setQcm(QcmService.convertToListDto(source.getQcm()));
        return result;
     }
+
+    public StudentTest format(StudentTestDto studentTestDto, StudentTest studentTest ) throws ResourceNotFoundException {
+        Student student =  studentRepository.findById(studentTestDto.getStudentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentTestDto.getStudentId()));
+
+        Qcm qcm = qcmRepository.findById(studentTestDto.getQcmId()).orElseThrow(() -> new ResourceNotFoundException("Qcm", "id", studentTestDto.getQcmId()));
+        if(studentTest==null){
+             studentTest = new StudentTest();
+        }
+        studentTest.setStudent(student);
+        studentTest.setQcm(qcm);
+        studentTest.setStartingDate(studentTestDto.getStartingDate());
+        studentTest.setEndDate(studentTestDto.getEndDate());
+        studentTest.setUpdatedDate(LocalDateTime.now());
+        return studentTest;
+    }
+
+
+
 }

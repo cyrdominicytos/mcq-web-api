@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 public class StudentListDto {
     private Long id;
     private String uuid;
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
 
     private LevelListDto level;
     private LocalDateTime creationDate;

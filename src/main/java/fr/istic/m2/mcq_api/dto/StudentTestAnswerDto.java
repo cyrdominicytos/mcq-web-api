@@ -8,6 +8,6 @@ import java.time.LocalDateTime;
 @Data
 public class StudentTestAnswerDto {
     private int duration;
-    private Long student_test_id;
-    private Long answer_id;
+    private Long studentTestId;
+    private Long answerId;
 }

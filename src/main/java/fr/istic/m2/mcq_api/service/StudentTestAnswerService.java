@@ -1,10 +1,11 @@
 package fr.istic.m2.mcq_api.service;
 
-import fr.istic.m2.mcq_api.domain.StudentTest;
-import fr.istic.m2.mcq_api.domain.StudentTestAnswer;
+import fr.istic.m2.mcq_api.domain.*;
 import fr.istic.m2.mcq_api.dto.StudentTestAnswerDto;
 import fr.istic.m2.mcq_api.dto.StudentTestAnswerListDto;
+import fr.istic.m2.mcq_api.dto.StudentTestDto;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
+import fr.istic.m2.mcq_api.repository.AnswerRepository;
 import fr.istic.m2.mcq_api.repository.StudentTestAnswerRepository;
 import fr.istic.m2.mcq_api.repository.StudentTestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +25,12 @@ public class StudentTestAnswerService {
     private StudentTestAnswerRepository studentTestAnswerRepository;
     @Autowired
     private StudentTestRepository studentTestRepository;
+    @Autowired
+    private AnswerRepository answerRepository;
     public StudentTestAnswerListDto createStudentTestAnswer(StudentTestAnswerDto studentTestAnswerDto) {
-        StudentTest studentTest =  studentTestRepository.findById(studentTestAnswerDto.getStudent_test_id())
-                .orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestAnswerDto.getStudent_test_id()));
-        //TODO  : Add answer checking
-
-        StudentTestAnswer studentTestAnswer = new StudentTestAnswer();
-        studentTestAnswer.setStudentTest(studentTest);
-        //TODO :  answer to  studentTestAnswer
-        studentTestAnswer.setDuration(studentTestAnswer.getDuration());
-        StudentTestAnswer result =  studentTestAnswerRepository.save(studentTestAnswer);
-        return  convertToStudentTestAnswerList(result);
+        StudentTestAnswer studentTestAnswer = this.format(studentTestAnswerDto, null);
+        studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
+        return  convertToStudentTestAnswerList(studentTestAnswer);
     }
 
     public StudentTestAnswerListDto getStudentTestAnswerById(Long studentTestAnswerId) {
@@ -54,23 +50,15 @@ public class StudentTestAnswerService {
     public StudentTestAnswerListDto updateStudentTestAnswer(Long studentTestAnswerId, StudentTestAnswerDto studentTestAnswerDto) {
         StudentTestAnswer studentTestAnswer =  studentTestAnswerRepository.findById(studentTestAnswerId)
                 .orElseThrow(() -> new ResourceNotFoundException("StudentTestAnswer", "id", studentTestAnswerId));
-
-        StudentTest studentTest =  studentTestRepository.findById(studentTestAnswerDto.getStudent_test_id())
-                .orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestAnswerDto.getStudent_test_id()));
-
-        //TODO  : Add answer checking
-
-        studentTestAnswer.setStudentTest(studentTest);
-        //TODO :  answer to  studentTestAnswer
-        studentTestAnswer.setDuration(studentTestAnswer.getDuration());
-        studentTestAnswer.setUpdatedDate(LocalDateTime.now());
-        StudentTestAnswer result =  studentTestAnswerRepository.save(studentTestAnswer);
-        return  convertToStudentTestAnswerList(result);
+        studentTestAnswer = this.format(studentTestAnswerDto, studentTestAnswer);
+        studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
+        return  convertToStudentTestAnswerList(studentTestAnswer);
     }
 
     public void deleteStudentTestAnswer(Long studentTestAnswerId) {
         studentTestRepository.deleteById(studentTestAnswerId);
     }
+
     public static StudentTestAnswerListDto convertToStudentTestAnswerList(StudentTestAnswer source){
         StudentTestAnswerListDto result = new StudentTestAnswerListDto();
         result.setId(source.getId());
@@ -78,7 +66,25 @@ public class StudentTestAnswerService {
         result.setCreationDate(source.getCreationDate());
         result.setUpdatedDate(source.getUpdatedDate());
         result.setStudentTest(StudentTestService.convertToStudentTestList(source.getStudentTest()));
-        //TODO : ADD Answer to the result
+        result.setAnswer(AnswerService.convertToListDto(source.getAnswer()));
        return result;
+    }
+
+    public StudentTestAnswer format(StudentTestAnswerDto studentTestAnswerDto, StudentTestAnswer studentTestAnswer ) throws ResourceNotFoundException {
+
+        StudentTest studentTest =  studentTestRepository.findById(studentTestAnswerDto.getStudentTestId())
+                .orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestAnswerDto.getStudentTestId()));
+
+        Answer answer = answerRepository.findById(studentTestAnswerDto.getAnswerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Answer", "id", studentTestAnswerDto.getAnswerId()));
+
+        if(studentTestAnswer==null)
+            studentTestAnswer = new StudentTestAnswer();
+
+        studentTestAnswer.setStudentTest(studentTest);
+        studentTestAnswer.setAnswer(answer);
+        studentTestAnswer.setDuration(studentTestAnswer.getDuration());
+        studentTestAnswer.setUpdatedDate(LocalDateTime.now());
+        return studentTestAnswer;
     }
 }

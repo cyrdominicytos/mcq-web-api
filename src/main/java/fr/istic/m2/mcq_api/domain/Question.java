@@ -19,11 +19,10 @@ public class Question {
     private List<QuestionComment> comments = new ArrayList<>();
     @ManyToOne
     private Qcm qcm;
-    @ManyToOne
-    private Level level;
     private String title;
     private boolean isActive;
     private int delay;
+    private int complexity;
     private LocalDateTime  creationDate;
     private LocalDateTime  updatedDate;
 }

@@ -1,8 +1,8 @@
 package fr.istic.m2.mcq_api.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
@@ -16,9 +16,7 @@ import java.util.List;
 @Data
 @Entity
 public class Teacher extends User {
-
-    //TODO : add qcmList relation
-    /*@OneToMany(mappedBy = "teacher")
-    List<Qcm> qcmList = new ArrayList<>();*/
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    List<Qcm> qcmList = new ArrayList<>();
 
 }

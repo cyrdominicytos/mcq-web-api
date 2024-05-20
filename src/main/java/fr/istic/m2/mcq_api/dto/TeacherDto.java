@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class TeacherDto {
     private String uuid;
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
 }

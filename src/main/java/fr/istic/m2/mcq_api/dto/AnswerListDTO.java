@@ -5,11 +5,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class StudentTestAnswerListDto {
+public class AnswerListDTO {
     private Long id;
-    private int duration;
+    private Long questionId;
+    private boolean isValid;
+    private int nbrPoint;
+    private  int commentCount;
+    private  int studentTestAnswerCount;
     private LocalDateTime creationDate;
     private LocalDateTime updatedDate;
-    private StudentTestListDto studentTest;
-    private AnswerListDTO answer;
 }

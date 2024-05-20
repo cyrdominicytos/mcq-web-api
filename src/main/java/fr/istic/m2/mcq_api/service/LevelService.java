@@ -64,9 +64,7 @@ public class LevelService {
        result.setFieldOfStudy(source.getFieldOfStudy());
        result.setCreationDate(source.getCreationDate());
        result.setUpdatedDate(source.getUpdatedDate());
-
-       //TODO : Update  result.setQcmCount(0);
-       result.setQcmCount(0);
+       result.setQcmCount(source.getQcmList().size());
        result.setStudentCount(source.getStudentList().size());
        return result;
     }

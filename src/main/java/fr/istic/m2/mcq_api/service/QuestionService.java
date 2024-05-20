@@ -45,7 +45,7 @@ public class QuestionService {
 
     public Question formatQuestion(QuestionDTO questionDTO, Question question) throws NoSuchElementException {
         Qcm qcm = this.qcmRepository.findById(questionDTO.getQcmId()).orElseThrow();
-        Level level = this.levelRepository.findById(questionDTO.getLevelId()).orElseThrow();
+        //Level level = this.levelRepository.findById(questionDTO.getLevelId()).orElseThrow();
         if (question == null){
             question = new Question();
             question.setCreationDate(LocalDateTime.now());
@@ -54,7 +54,7 @@ public class QuestionService {
         question.setTitle(questionDTO.getTitle());
         question.setActive(question.isActive());
         question.setDelay(questionDTO.getDelay());
-        question.setLevel(level);
+        question.setComplexity(questionDTO.getComplexity());
         question.setUpdatedDate(LocalDateTime.now());
         return question;
     }

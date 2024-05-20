@@ -1,8 +1,11 @@
 package fr.istic.m2.mcq_api.service;
 
 import fr.istic.m2.mcq_api.domain.Answer;
+import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.AnswerDTO;
+import fr.istic.m2.mcq_api.dto.AnswerListDTO;
+import fr.istic.m2.mcq_api.dto.QcmListDTO;
 import fr.istic.m2.mcq_api.repository.AnswerRepository;
 import fr.istic.m2.mcq_api.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +55,18 @@ public class AnswerService {
         answer.setCreationDate(LocalDateTime.now());
         answer.setValid(answer.isValid());
         return answer;
+    }
+
+    public static AnswerListDTO convertToListDto(Answer source){
+        AnswerListDTO result = new AnswerListDTO();
+        result.setId(source.getId());
+        result.setValid(source.isValid());
+        result.setNbrPoint(source.getNbrPoint());
+        result.setQuestionId(source.getQuestion().getId());
+        result.setCreationDate(source.getCreationDate());
+        result.setUpdatedDate(source.getUpdatedDate());
+        result.setCommentCount(source.getComments().size());
+        result.setStudentTestAnswerCount(source.getStudentTestAnswers().size());
+        return result;
     }
 }

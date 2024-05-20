@@ -22,10 +22,10 @@ public class Level {
     private String classOfStudy;
     private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
-    //TODO : add qcmList relation
-    /*@OneToMany(mappedBy = "level")
-    List<Qcm> qcmList = new ArrayList<>();*/
 
-    @OneToMany(mappedBy = "studentLevel")
+    @OneToMany(mappedBy = "level",cascade = CascadeType.ALL)
+    List<Qcm> qcmList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "studentLevel", cascade = CascadeType.ALL)
     List<Student> studentList = new ArrayList<>();
 }

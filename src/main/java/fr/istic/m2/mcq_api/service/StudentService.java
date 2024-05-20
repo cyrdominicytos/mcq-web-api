@@ -2,8 +2,10 @@ package fr.istic.m2.mcq_api.service;
 
 import fr.istic.m2.mcq_api.domain.Level;
 import fr.istic.m2.mcq_api.domain.Student;
+import fr.istic.m2.mcq_api.domain.Teacher;
 import fr.istic.m2.mcq_api.dto.StudentDto;
 import fr.istic.m2.mcq_api.dto.StudentListDto;
+import fr.istic.m2.mcq_api.dto.TeacherDto;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.LevelRepository;
 import fr.istic.m2.mcq_api.repository.StudentRepository;
@@ -25,17 +27,9 @@ public class StudentService {
     @Autowired
     private LevelRepository levelRepository;
     public StudentListDto createStudent(StudentDto studentDto) {
-
-        Level level = levelRepository.findById(studentDto.getLevel_id())
-                .orElseThrow(()-> new ResourceNotFoundException("Level", "id", studentDto.getLevel_id()));
-        Student student = new Student();
-        student.setStudentLevel(level);
-        student.setUuid(studentDto.getUuid());
-        student.setFirst_name(studentDto.getFirst_name());
-        student.setLast_name(studentDto.getLast_name());
-
-        Student result =  studentRepository.save(student);
-        return  convertToStudentList(result);
+        Student student = this.format(studentDto, null);
+        studentRepository.saveAndFlush(student);
+        return  convertToStudentList(student);
     }
 
     public StudentListDto getStudentById(Long studentId) {
@@ -55,17 +49,9 @@ public class StudentService {
     public StudentListDto updateStudent(Long studentId, StudentDto studentDto) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
-
-        Level level = levelRepository.findById(studentDto.getLevel_id())
-                        .orElseThrow(()-> new ResourceNotFoundException("Level", "id", studentDto.getLevel_id()));
-
-        student.setStudentLevel(level);
-        student.setUuid(studentDto.getUuid());
-        student.setFirst_name(studentDto.getFirst_name());
-        student.setLast_name(studentDto.getLast_name());
-        student.setUpdatedDate(LocalDateTime.now());
-        Student result =  studentRepository.save(student);
-        return  convertToStudentList(result);
+        student = this.format(studentDto, student);
+        studentRepository.saveAndFlush(student);
+        return  convertToStudentList(student);
     }
 
     public void deleteStudent(Long studentId) {
@@ -77,11 +63,25 @@ public class StudentService {
 
         result.setId(source.getId());
         result.setUuid(source.getUuid());
-        result.setLast_name(source.getLast_name());
-        result.setFirst_name(source.getFirst_name());
+        result.setLastName(source.getLastName());
+        result.setFirstName(source.getFirstName());
         result.setUpdatedDate(source.getUpdatedDate());
         result.setCreationDate(source.getCreationDate());
         result.setLevel(LevelService.convertToLevelList(source.getStudentLevel()));
         return result;
+    }
+
+    public Student format(StudentDto studentDto, Student student ) throws  ResourceNotFoundException{
+        Level level = levelRepository.findById(studentDto.getLevelId())
+                .orElseThrow(()-> new ResourceNotFoundException("Level", "id", studentDto.getLevelId()));
+        if(student==null)
+            student = new Student();
+
+        student.setUuid(studentDto.getUuid());
+        student.setFirstName(studentDto.getFirstName());
+        student.setLastName(studentDto.getLastName());
+        student.setStudentLevel(level);
+        student.setUpdatedDate(LocalDateTime.now());
+        return student;
     }
 }
