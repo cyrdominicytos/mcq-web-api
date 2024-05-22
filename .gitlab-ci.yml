@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo "Building the project..."
+    - # Add your build commands here
+
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - # Add your test commands here
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the project..."
+    - # Add your deploy commands here
+  only:
+    - master
