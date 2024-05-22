@@ -1,11 +1,10 @@
 package fr.istic.m2.mcq_api.controller;
 
 import fr.istic.m2.mcq_api.dto.StudentTestAnswerDto;
-import fr.istic.m2.mcq_api.dto.StudentTestDto;
+
 import fr.istic.m2.mcq_api.dto.StudentTestAnswerListDto;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.StudentTestAnswerService;
-import fr.istic.m2.mcq_api.service.StudentTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
