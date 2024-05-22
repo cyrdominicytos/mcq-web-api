@@ -2,6 +2,7 @@ package fr.istic.m2.mcq_api.controller;
 
 import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.dto.QcmDTO;
+import fr.istic.m2.mcq_api.dto.QcmListDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.QcmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class QcmController {
     private QcmService qcmService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Qcm> browse(@PathVariable Long id){
-        Qcm qcm = this.qcmService.read(id);
+    public ResponseEntity<QcmListDTO> browse(@PathVariable Long id){
+        QcmListDTO qcm = this.qcmService.read(id);
         if (qcm == null){
             throw new ResourceNotFoundException("qcm not found");
         }
@@ -26,14 +27,14 @@ public class QcmController {
 
 
     @PostMapping
-    public @ResponseBody ResponseEntity<Qcm> create(@RequestBody QcmDTO qcmDTO){
-        Qcm qcm = this.qcmService.create(qcmDTO);
+    public @ResponseBody ResponseEntity<QcmListDTO> create(@RequestBody QcmDTO qcmDTO){
+        QcmListDTO qcm = this.qcmService.create(qcmDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(qcm);
     }
 
     @PutMapping("/update/{id}")
-    public @ResponseBody ResponseEntity<Qcm> update(@PathVariable Long id, @RequestBody QcmDTO qcmDTO){
-        Qcm qcm = this.qcmService.update(id, qcmDTO);
+    public @ResponseBody ResponseEntity<QcmListDTO> update(@PathVariable Long id, @RequestBody QcmDTO qcmDTO){
+        QcmListDTO qcm = this.qcmService.update(id, qcmDTO);
         return ResponseEntity.status(HttpStatus.OK).body(qcm);
     }
     @DeleteMapping("/delete/{id}")

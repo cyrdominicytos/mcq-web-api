@@ -52,6 +52,8 @@ public class AnswerService {
     public Answer formatAnswer(AnswerDTO answerDTO, Question question){
         Answer answer = new Answer();
         answer.setQuestion(question);
+        answer.setTitle(answerDTO.getTitle());
+        answer.setActive(answerDTO.isActive());
         answer.setNbrPoint(answerDTO.getNbrPoint());
         answer.setCreationDate(LocalDateTime.now());
         answer.setValid(answer.isValid());
@@ -61,6 +63,8 @@ public class AnswerService {
     public static AnswerListDTO convertToListDto(Answer source){
         AnswerListDTO result = new AnswerListDTO();
         result.setId(source.getId());
+        result.setActive(source.isActive());
+        result.setTitle(source.getTitle());
         result.setValid(source.isValid());
         result.setNbrPoint(source.getNbrPoint());
         result.setQuestionId(source.getQuestion().getId());

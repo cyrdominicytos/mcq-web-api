@@ -14,13 +14,15 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<AnswerComment> comments;
+    private List<AnswerComment> comments  = new ArrayList<>();;
     @ManyToOne
     private Question question;
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     private List<StudentTestAnswer> studentTestAnswers = new ArrayList<>();
-    private boolean isValid;
+    private boolean isValid = false;
+    private boolean isActive = true;
     private int nbrPoint;
+    private String title;
     private LocalDateTime creationDate;
     private LocalDateTime updatedDate;
 }

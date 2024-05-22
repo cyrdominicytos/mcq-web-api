@@ -6,5 +6,6 @@ import lombok.Data;
 public class QuestionCommentDTO {
     private Long questionId;
     private String suggestion;
-    private boolean isAccepted;
+    private String description;
+    private boolean isAccepted = false;
 }

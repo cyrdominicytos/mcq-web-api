@@ -4,7 +4,9 @@ import lombok.Data;
 
 @Data
 public class AnswerDTO {
-    private Long questionId;
-    private boolean isValid;
+    private  String title;
     private int nbrPoint;
+    private Long questionId;
+    private boolean isValid = false;
+    private boolean isActive = true;
 }

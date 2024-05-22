@@ -25,6 +25,7 @@ public class AnswerCommentService {
         try {
             AnswerComment comment = this.answerCommentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("AnswerComment", "id", id));
             comment.setSuggestion(answerCommentDTO.getSuggestion());
+            comment.setDescription(answerCommentDTO.getDescription());
             comment.setAccepted(answerCommentDTO.isAccepted());
             comment.setUpdatedDate(LocalDateTime.now());
             this.answerCommentRepository.saveAndFlush(comment);
@@ -58,6 +59,7 @@ public class AnswerCommentService {
         c.setAnswer(answer);
         c.setAccepted(answerCommentDTO.isAccepted());
         c.setSuggestion(answerCommentDTO.getSuggestion());
+        c.setDescription(answerCommentDTO.getDescription());
         c.setUpdatedDate(LocalDateTime.now());
         c.setCreationDate(LocalDateTime.now());
         return c;
