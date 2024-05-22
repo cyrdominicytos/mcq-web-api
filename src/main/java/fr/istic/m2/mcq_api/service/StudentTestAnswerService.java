@@ -34,9 +34,9 @@ public class StudentTestAnswerService {
         return  convertToStudentTestAnswerList(studentTestAnswer);
     }
 
-    public StudentTestAnswerListDto getStudentTestAnswerById(Long studentTestAnswerId)  throws NoSuchElementException{
+    public StudentTestAnswerListDto getStudentTestAnswerById(Long studentTestAnswerId)  throws ResourceNotFoundException{
         StudentTestAnswer studentTestAnswer =  studentTestAnswerRepository.findById(studentTestAnswerId)
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("StudentTestAnswer", "id", studentTestAnswerId));
         return convertToStudentTestAnswerList(studentTestAnswer);
     }
 
@@ -48,9 +48,9 @@ public class StudentTestAnswerService {
         return result;
     }
 
-    public StudentTestAnswerListDto updateStudentTestAnswer(Long studentTestAnswerId, StudentTestAnswerDto studentTestAnswerDto) throws NoSuchElementException {
+    public StudentTestAnswerListDto updateStudentTestAnswer(Long studentTestAnswerId, StudentTestAnswerDto studentTestAnswerDto) throws ResourceNotFoundException {
         StudentTestAnswer studentTestAnswer =  studentTestAnswerRepository.findById(studentTestAnswerId)
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("StudentTestAnswer", "id", studentTestAnswerId));
         studentTestAnswer = this.format(studentTestAnswerDto, studentTestAnswer);
         studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
         return  convertToStudentTestAnswerList(studentTestAnswer);
@@ -71,12 +71,12 @@ public class StudentTestAnswerService {
        return result;
     }
 
-    public StudentTestAnswer format(StudentTestAnswerDto studentTestAnswerDto, StudentTestAnswer studentTestAnswer ) throws NoSuchElementException {
+    public StudentTestAnswer format(StudentTestAnswerDto studentTestAnswerDto, StudentTestAnswer studentTestAnswer ) throws ResourceNotFoundException {
 
         StudentTest studentTest =  studentTestRepository.findById(studentTestAnswerDto.getStudentTestId())
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("StudentTest", "id", studentTestAnswerDto.getStudentTestId()));
         Answer answer = answerRepository.findById(studentTestAnswerDto.getAnswerId())
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("Answer", "id", studentTestAnswerDto.getAnswerId()));
         if(studentTestAnswer==null)
             studentTestAnswer = new StudentTestAnswer();
 

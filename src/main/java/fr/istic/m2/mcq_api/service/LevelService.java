@@ -28,9 +28,9 @@ public class LevelService {
         return  convertToLevelList(level);
     }
 
-    public LevelListDto getLevelById(Long levelId) throws NoSuchElementException {
+    public LevelListDto getLevelById(Long levelId) throws ResourceNotFoundException {
         Level level =  levelRepository.findById(levelId)
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("Level", "id", levelId));
         return convertToLevelList(level);
     }
 
@@ -42,9 +42,9 @@ public class LevelService {
         return result;
     }
 
-    public LevelListDto updateLevel(Long levelId, LevelDto levelDto) throws NoSuchElementException {
+    public LevelListDto updateLevel(Long levelId, LevelDto levelDto) throws ResourceNotFoundException {
         Level level = levelRepository.findById(levelId)
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("Level", "id", levelId));
         level.setClassOfStudy(levelDto.getClassOfStudy());
         level.setFieldOfStudy(levelDto.getFieldOfStudy());
         level.setUpdatedDate(LocalDateTime.now());

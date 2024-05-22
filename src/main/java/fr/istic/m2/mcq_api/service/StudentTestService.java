@@ -39,9 +39,9 @@ public class StudentTestService {
         return  convertToStudentTestList(studentTest);
     }
 
-    public StudentTestListDto getStudentTestById(Long studentTestId) throws NoSuchElementException {
+    public StudentTestListDto getStudentTestById(Long studentTestId)  throws ResourceNotFoundException {
         StudentTest studentTest =  studentTestRepository.findById(studentTestId)
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("StudentTest", "id", studentTestId));
         return convertToStudentTestList(studentTest);
     }
 
@@ -53,8 +53,9 @@ public class StudentTestService {
         return result;
     }
 
-    public StudentTestListDto updateStudentTest(Long studentTestId, StudentTestDto studentTestDto) throws NoSuchElementException {
-        StudentTest studentTest = studentTestRepository.findById(studentTestId).orElseThrow();
+    public StudentTestListDto updateStudentTest(Long studentTestId, StudentTestDto studentTestDto)  throws ResourceNotFoundException {
+        StudentTest studentTest = studentTestRepository.findById(studentTestId)
+                .orElseThrow(()-> new ResourceNotFoundException("StudentTest", "id", studentTestId));
         studentTest = this.format(studentTestDto, studentTest);
         studentTestRepository.saveAndFlush(studentTest);
         return  convertToStudentTestList(studentTest);
@@ -75,11 +76,12 @@ public class StudentTestService {
        return result;
     }
 
-    public StudentTest format(StudentTestDto studentTestDto, StudentTest studentTest )  throws NoSuchElementException {
+    public StudentTest format(StudentTestDto studentTestDto, StudentTest studentTest )   throws ResourceNotFoundException {
         Student student =  studentRepository.findById(studentTestDto.getStudentId())
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("Student", "id", studentTestDto.getStudentId()));
 
-        Qcm qcm = qcmRepository.findById(studentTestDto.getQcmId()).orElseThrow();
+        Qcm qcm = qcmRepository.findById(studentTestDto.getQcmId())
+                .orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", studentTestDto.getQcmId()));
         if(studentTest==null){
              studentTest = new StudentTest();
         }

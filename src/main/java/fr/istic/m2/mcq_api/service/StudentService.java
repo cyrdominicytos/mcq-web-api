@@ -28,13 +28,13 @@ public class StudentService {
     private StudentRepository studentRepository;
     @Autowired
     private LevelRepository levelRepository;
-    public StudentListDto createStudent(StudentDto studentDto)  throws NoSuchElementException {
+    public StudentListDto createStudent(StudentDto studentDto)  throws ResourceNotFoundException {
         Student student = this.format(studentDto, null);
         studentRepository.saveAndFlush(student);
         return  convertToStudentList(student);
     }
 
-    public StudentListDto getStudentById(Long studentId)  throws NoSuchElementException{
+    public StudentListDto getStudentById(Long studentId)  throws ResourceNotFoundException{
         Student student =  studentRepository.findById(studentId)
                 .orElseThrow();
         return convertToStudentList(student);
@@ -48,9 +48,9 @@ public class StudentService {
         return result;
     }
 
-    public StudentListDto updateStudent(Long studentId, StudentDto studentDto)  throws NoSuchElementException{
+    public StudentListDto updateStudent(Long studentId, StudentDto studentDto)  throws ResourceNotFoundException{
         Student student = studentRepository.findById(studentId)
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("Student", "id", studentId));
         student = this.format(studentDto, student);
         studentRepository.saveAndFlush(student);
         return  convertToStudentList(student);
@@ -73,9 +73,9 @@ public class StudentService {
         return result;
     }
 
-    public Student format(StudentDto studentDto, Student student ) throws NoSuchElementException{
+    public Student format(StudentDto studentDto, Student student ) throws ResourceNotFoundException{
         Level level = levelRepository.findById(studentDto.getLevelId())
-                .orElseThrow();
+                .orElseThrow(()-> new ResourceNotFoundException("Level", "id", studentDto.getLevelId()));
         if(student==null)
             student = new Student();
 
