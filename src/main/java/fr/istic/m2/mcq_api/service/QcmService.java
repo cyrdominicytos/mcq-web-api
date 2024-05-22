@@ -7,6 +7,7 @@ import fr.istic.m2.mcq_api.domain.Teacher;
 import fr.istic.m2.mcq_api.dto.QcmDTO;
 import fr.istic.m2.mcq_api.dto.QcmListDTO;
 import fr.istic.m2.mcq_api.dto.StudentTestListDto;
+import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.LevelRepository;
 import fr.istic.m2.mcq_api.repository.QcmRepository;
 import fr.istic.m2.mcq_api.repository.TeacherRepository;
@@ -25,8 +26,8 @@ public class QcmService {
     private LevelRepository levelRepository;
     @Autowired
     private TeacherRepository teacherRepository;
-    public Qcm read(Long id) throws NoSuchElementException {
-        return this.qcmRepository.findById(id).orElseThrow();
+    public Qcm read(Long id) throws ResourceNotFoundException {
+        return this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
     }
 
     public Qcm create(QcmDTO qcmDTO) {
@@ -35,8 +36,8 @@ public class QcmService {
         return qcm;
     }
 
-    public Qcm update(Long id, QcmDTO qcmDTO) throws NoSuchElementException {
-        Qcm qcm = this.qcmRepository.findById(id).orElseThrow();
+    public Qcm update(Long id, QcmDTO qcmDTO) throws ResourceNotFoundException {
+        Qcm qcm = this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
         qcm = this.formatQcm(qcmDTO, qcm);
         this.qcmRepository.saveAndFlush(qcm);
         return qcm;
@@ -46,9 +47,9 @@ public class QcmService {
         this.qcmRepository.deleteById(id);
     }
 
-    public Qcm formatQcm(QcmDTO qcmDTO, Qcm qcm) throws NoSuchElementException {
-        Level level = this.levelRepository.findById(qcmDTO.getLevelId()).orElseThrow();
-        Teacher teacher = this.teacherRepository.findById(qcmDTO.getTeacherId()).orElseThrow();
+    public Qcm formatQcm(QcmDTO qcmDTO, Qcm qcm) throws ResourceNotFoundException {
+        Level level = this.levelRepository.findById(qcmDTO.getLevelId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", qcmDTO.getLevelId()));
+        Teacher teacher = this.teacherRepository.findById(qcmDTO.getTeacherId()).orElseThrow(()-> new ResourceNotFoundException("Teacher", "id", qcmDTO.getTeacherId()));
         if (qcm == null){
             qcm = new Qcm();
             qcm.setCreationDate(LocalDateTime.now());

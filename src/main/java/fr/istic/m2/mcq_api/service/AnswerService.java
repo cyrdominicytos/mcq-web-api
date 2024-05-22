@@ -6,6 +6,7 @@ import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.AnswerDTO;
 import fr.istic.m2.mcq_api.dto.AnswerListDTO;
 import fr.istic.m2.mcq_api.dto.QcmListDTO;
+import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.AnswerRepository;
 import fr.istic.m2.mcq_api.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,9 @@ public class AnswerService {
         return answer;
     }
 
-    public Answer update(Long id, AnswerDTO answerDTO) throws NoSuchElementException {
-        Answer answer = this.answerRepository.findById(id).orElseThrow();
-        Question question = this.questionRepository.findById(id).orElseThrow();
+    public Answer update(Long id, AnswerDTO answerDTO) throws ResourceNotFoundException {
+        Answer answer = this.answerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Answer", "id", id));
+        Question question = this.questionRepository.findById(answerDTO.getQuestionId()).orElseThrow(()-> new ResourceNotFoundException("Question", "id", answerDTO.getQuestionId()));
         answer.setValid(answerDTO.isValid());
         answer.setNbrPoint(answerDTO.getNbrPoint());
         answer.setQuestion(question);

@@ -3,6 +3,7 @@ package fr.istic.m2.mcq_api.service;
 import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.domain.AnswerComment;
 import fr.istic.m2.mcq_api.dto.AnswerCommentDTO;
+import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.AnswerCommentRepository;
 import fr.istic.m2.mcq_api.repository.AnswerRepository;
 import fr.istic.m2.mcq_api.repository.QuestionCommentRepository;
@@ -22,7 +23,7 @@ public class AnswerCommentService {
 
     public AnswerComment update(Long id, AnswerCommentDTO answerCommentDTO) {
         try {
-            AnswerComment comment = this.answerCommentRepository.findById(id).orElseThrow();
+            AnswerComment comment = this.answerCommentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("AnswerComment", "id", id));
             comment.setSuggestion(answerCommentDTO.getSuggestion());
             comment.setAccepted(answerCommentDTO.isAccepted());
             comment.setUpdatedDate(LocalDateTime.now());
@@ -62,8 +63,8 @@ public class AnswerCommentService {
         return c;
     }
 
-    public Answer getAnswer(Long id) throws NoSuchElementException {
-        return this.answerRepository.findById(id).orElseThrow();
+    public Answer getAnswer(Long id) throws ResourceNotFoundException {
+        return this.answerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Answer", "id", id));
     }
 
     public void delete(Long id) {

@@ -5,6 +5,7 @@ import fr.istic.m2.mcq_api.domain.Level;
 import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.QuestionDTO;
+import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.LevelRepository;
 import fr.istic.m2.mcq_api.repository.QcmRepository;
 import fr.istic.m2.mcq_api.repository.QuestionRepository;
@@ -22,8 +23,8 @@ public class QuestionService {
     private LevelRepository levelRepository;
     @Autowired
     private QuestionRepository questionRepository;
-    public Question read(Long id) throws NoSuchElementException{
-        return this.questionRepository.findById(id).orElseThrow();
+    public Question read(Long id) throws ResourceNotFoundException {
+        return this.questionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Question", "id", id));
     }
 
     public Question create(QuestionDTO questionDTO) {
@@ -32,8 +33,8 @@ public class QuestionService {
         return question;
     }
 
-    public Question update(Long id, QuestionDTO questionDTO) throws NoSuchElementException {
-        Question question = this.questionRepository.findById(id).orElseThrow();
+    public Question update(Long id, QuestionDTO questionDTO) throws ResourceNotFoundException {
+        Question question = this.questionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Question", "id", id));
         question = this.formatQuestion(questionDTO, question);
         this.questionRepository.saveAndFlush(question);
         return question;
@@ -43,9 +44,9 @@ public class QuestionService {
         this.questionRepository.deleteById(id);
     }
 
-    public Question formatQuestion(QuestionDTO questionDTO, Question question) throws NoSuchElementException {
-        Qcm qcm = this.qcmRepository.findById(questionDTO.getQcmId()).orElseThrow();
-        //Level level = this.levelRepository.findById(questionDTO.getLevelId()).orElseThrow();
+    public Question formatQuestion(QuestionDTO questionDTO, Question question) throws ResourceNotFoundException {
+        Qcm qcm = this.qcmRepository.findById(questionDTO.getQcmId()).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", questionDTO.getQcmId()));
+        //Level level = this.levelRepository.findById(questionDTO.getLevelId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", studentDto.getLevelId()));
         if (question == null){
             question = new Question();
             question.setCreationDate(LocalDateTime.now());
