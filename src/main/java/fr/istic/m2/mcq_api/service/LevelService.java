@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Cyriaque TOSSOU, Tuo Adama
@@ -23,14 +24,13 @@ public class LevelService {
         Level level = new Level();
         level.setClassOfStudy(levelDto.getClassOfStudy());
         level.setFieldOfStudy(levelDto.getFieldOfStudy());
-
-        Level result =  levelRepository.save(level);
-        return  convertToLevelList(result);
+        levelRepository.saveAndFlush(level);
+        return  convertToLevelList(level);
     }
 
-    public LevelListDto getLevelById(Long levelId) {
+    public LevelListDto getLevelById(Long levelId) throws NoSuchElementException {
         Level level =  levelRepository.findById(levelId)
-                .orElseThrow(() -> new ResourceNotFoundException("Level", "id", levelId));
+                .orElseThrow();
         return convertToLevelList(level);
     }
 
@@ -42,15 +42,14 @@ public class LevelService {
         return result;
     }
 
-    public LevelListDto updateLevel(Long levelId, LevelDto levelDto) {
+    public LevelListDto updateLevel(Long levelId, LevelDto levelDto) throws NoSuchElementException {
         Level level = levelRepository.findById(levelId)
-                .orElseThrow(() -> new ResourceNotFoundException("Level", "id", levelId));
-
+                .orElseThrow();
         level.setClassOfStudy(levelDto.getClassOfStudy());
         level.setFieldOfStudy(levelDto.getFieldOfStudy());
         level.setUpdatedDate(LocalDateTime.now());
-        Level result =  levelRepository.save(level);
-        return  convertToLevelList(result);
+        levelRepository.saveAndFlush(level);
+        return  convertToLevelList(level);
     }
 
     public void deleteLevel(Long levelId) {
@@ -58,7 +57,6 @@ public class LevelService {
     }
     public static LevelListDto convertToLevelList(Level source){
         LevelListDto result = new LevelListDto();
-
        result.setId(source.getId());
        result.setClassOfStudy(source.getClassOfStudy());
        result.setFieldOfStudy(source.getFieldOfStudy());

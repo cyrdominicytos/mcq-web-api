@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Cyriaque TOSSOU, Tuo Adama
@@ -31,9 +32,9 @@ public class TeacherService {
         return  convertToTeacherList(teacher);
     }
 
-    public TeacherListDto getTeacherById(Long teacherId) {
+    public TeacherListDto getTeacherById(Long teacherId) throws NoSuchElementException {
         Teacher teacher =  teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher", "id", teacherId));
+                .orElseThrow();
         return convertToTeacherList(teacher);
     }
 
@@ -45,9 +46,9 @@ public class TeacherService {
         return result;
     }
 
-    public TeacherListDto updateTeacher(Long teacherId, TeacherDto teacherDto) {
+    public TeacherListDto updateTeacher(Long teacherId, TeacherDto teacherDto) throws NoSuchElementException {
         Teacher teacher = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher", "id", teacherId));
+                .orElseThrow();
         teacher = format(teacherDto, teacher);
         teacherRepository.saveAndFlush(teacher);
         return  convertToTeacherList(teacher);

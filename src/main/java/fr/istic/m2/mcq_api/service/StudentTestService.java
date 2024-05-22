@@ -39,9 +39,9 @@ public class StudentTestService {
         return  convertToStudentTestList(studentTest);
     }
 
-    public StudentTestListDto getStudentTestById(Long studentTestId) {
+    public StudentTestListDto getStudentTestById(Long studentTestId) throws NoSuchElementException {
         StudentTest studentTest =  studentTestRepository.findById(studentTestId)
-                .orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestId));
+                .orElseThrow();
         return convertToStudentTestList(studentTest);
     }
 
@@ -53,8 +53,8 @@ public class StudentTestService {
         return result;
     }
 
-    public StudentTestListDto updateStudentTest(Long studentTestId, StudentTestDto studentTestDto) {
-        StudentTest studentTest = studentTestRepository.findById(studentTestId).orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestId));
+    public StudentTestListDto updateStudentTest(Long studentTestId, StudentTestDto studentTestDto) throws NoSuchElementException {
+        StudentTest studentTest = studentTestRepository.findById(studentTestId).orElseThrow();
         studentTest = this.format(studentTestDto, studentTest);
         studentTestRepository.saveAndFlush(studentTest);
         return  convertToStudentTestList(studentTest);
@@ -75,11 +75,11 @@ public class StudentTestService {
        return result;
     }
 
-    public StudentTest format(StudentTestDto studentTestDto, StudentTest studentTest ) throws ResourceNotFoundException {
+    public StudentTest format(StudentTestDto studentTestDto, StudentTest studentTest )  throws NoSuchElementException {
         Student student =  studentRepository.findById(studentTestDto.getStudentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentTestDto.getStudentId()));
+                .orElseThrow();
 
-        Qcm qcm = qcmRepository.findById(studentTestDto.getQcmId()).orElseThrow(() -> new ResourceNotFoundException("Qcm", "id", studentTestDto.getQcmId()));
+        Qcm qcm = qcmRepository.findById(studentTestDto.getQcmId()).orElseThrow();
         if(studentTest==null){
              studentTest = new StudentTest();
         }

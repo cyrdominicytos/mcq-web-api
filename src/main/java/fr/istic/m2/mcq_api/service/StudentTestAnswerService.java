@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Cyriaque TOSSOU, Tuo Adama
@@ -33,9 +34,9 @@ public class StudentTestAnswerService {
         return  convertToStudentTestAnswerList(studentTestAnswer);
     }
 
-    public StudentTestAnswerListDto getStudentTestAnswerById(Long studentTestAnswerId) {
+    public StudentTestAnswerListDto getStudentTestAnswerById(Long studentTestAnswerId)  throws NoSuchElementException{
         StudentTestAnswer studentTestAnswer =  studentTestAnswerRepository.findById(studentTestAnswerId)
-                .orElseThrow(() -> new ResourceNotFoundException("StudentTestAnswer", "id", studentTestAnswerId));
+                .orElseThrow();
         return convertToStudentTestAnswerList(studentTestAnswer);
     }
 
@@ -47,9 +48,9 @@ public class StudentTestAnswerService {
         return result;
     }
 
-    public StudentTestAnswerListDto updateStudentTestAnswer(Long studentTestAnswerId, StudentTestAnswerDto studentTestAnswerDto) {
+    public StudentTestAnswerListDto updateStudentTestAnswer(Long studentTestAnswerId, StudentTestAnswerDto studentTestAnswerDto) throws NoSuchElementException {
         StudentTestAnswer studentTestAnswer =  studentTestAnswerRepository.findById(studentTestAnswerId)
-                .orElseThrow(() -> new ResourceNotFoundException("StudentTestAnswer", "id", studentTestAnswerId));
+                .orElseThrow();
         studentTestAnswer = this.format(studentTestAnswerDto, studentTestAnswer);
         studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
         return  convertToStudentTestAnswerList(studentTestAnswer);
@@ -70,14 +71,12 @@ public class StudentTestAnswerService {
        return result;
     }
 
-    public StudentTestAnswer format(StudentTestAnswerDto studentTestAnswerDto, StudentTestAnswer studentTestAnswer ) throws ResourceNotFoundException {
+    public StudentTestAnswer format(StudentTestAnswerDto studentTestAnswerDto, StudentTestAnswer studentTestAnswer ) throws NoSuchElementException {
 
         StudentTest studentTest =  studentTestRepository.findById(studentTestAnswerDto.getStudentTestId())
-                .orElseThrow(() -> new ResourceNotFoundException("StudentTest", "id", studentTestAnswerDto.getStudentTestId()));
-
+                .orElseThrow();
         Answer answer = answerRepository.findById(studentTestAnswerDto.getAnswerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Answer", "id", studentTestAnswerDto.getAnswerId()));
-
+                .orElseThrow();
         if(studentTestAnswer==null)
             studentTestAnswer = new StudentTestAnswer();
 

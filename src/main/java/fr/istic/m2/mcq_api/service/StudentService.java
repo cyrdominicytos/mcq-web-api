@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 /**
  * @author Cyriaque TOSSOU, Tuo Adama
  * Service to manage request releated to Student entity
@@ -26,15 +28,15 @@ public class StudentService {
     private StudentRepository studentRepository;
     @Autowired
     private LevelRepository levelRepository;
-    public StudentListDto createStudent(StudentDto studentDto) {
+    public StudentListDto createStudent(StudentDto studentDto)  throws NoSuchElementException {
         Student student = this.format(studentDto, null);
         studentRepository.saveAndFlush(student);
         return  convertToStudentList(student);
     }
 
-    public StudentListDto getStudentById(Long studentId) {
+    public StudentListDto getStudentById(Long studentId)  throws NoSuchElementException{
         Student student =  studentRepository.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
+                .orElseThrow();
         return convertToStudentList(student);
     }
 
@@ -46,9 +48,9 @@ public class StudentService {
         return result;
     }
 
-    public StudentListDto updateStudent(Long studentId, StudentDto studentDto) {
+    public StudentListDto updateStudent(Long studentId, StudentDto studentDto)  throws NoSuchElementException{
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
+                .orElseThrow();
         student = this.format(studentDto, student);
         studentRepository.saveAndFlush(student);
         return  convertToStudentList(student);
@@ -71,9 +73,9 @@ public class StudentService {
         return result;
     }
 
-    public Student format(StudentDto studentDto, Student student ) throws  ResourceNotFoundException{
+    public Student format(StudentDto studentDto, Student student ) throws NoSuchElementException{
         Level level = levelRepository.findById(studentDto.getLevelId())
-                .orElseThrow(()-> new ResourceNotFoundException("Level", "id", studentDto.getLevelId()));
+                .orElseThrow();
         if(student==null)
             student = new Student();
 
