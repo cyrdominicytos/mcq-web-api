@@ -1,4 +1,4 @@
-package fr.istic.m2.mcq_api.security;
+package fr.istic.m2.mcq_api;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,7 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
