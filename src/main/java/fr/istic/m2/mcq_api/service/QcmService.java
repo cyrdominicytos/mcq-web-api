@@ -26,21 +26,22 @@ public class QcmService {
     private LevelRepository levelRepository;
     @Autowired
     private TeacherRepository teacherRepository;
-    public Qcm read(Long id) throws ResourceNotFoundException {
-        return this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
+    public QcmListDTO read(Long id) throws ResourceNotFoundException {
+        Qcm qcm =   this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
+        return  convertToListDto(qcm);
     }
 
-    public Qcm create(QcmDTO qcmDTO) {
+    public QcmListDTO create(QcmDTO qcmDTO) {
         Qcm qcm = this.formatQcm(qcmDTO, null);
         this.qcmRepository.saveAndFlush(qcm);
-        return qcm;
+        return convertToListDto(qcm);
     }
 
-    public Qcm update(Long id, QcmDTO qcmDTO) throws ResourceNotFoundException {
+    public QcmListDTO update(Long id, QcmDTO qcmDTO) throws ResourceNotFoundException {
         Qcm qcm = this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
         qcm = this.formatQcm(qcmDTO, qcm);
         this.qcmRepository.saveAndFlush(qcm);
-        return qcm;
+        return convertToListDto(qcm) ;
     }
 
     public void delete(Long id) {

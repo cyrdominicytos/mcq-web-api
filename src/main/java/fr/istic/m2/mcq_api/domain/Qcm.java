@@ -19,7 +19,7 @@ public class Qcm {
     private Teacher teacher;
 
     @OneToMany(mappedBy = "qcm",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Question> questions;
+    private List<Question> questions  = new ArrayList<>();;
 
     @OneToMany(mappedBy = "qcm", cascade = CascadeType.ALL)
     private List<StudentTest> studentTestList = new ArrayList<>();
