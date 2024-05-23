@@ -6,7 +6,6 @@ stages:
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode --errors --fail-at-end --show-version"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  DOCKER_DRIVER: overlay2
 
 # Cache Maven dependencies
 cache:
@@ -20,12 +19,9 @@ before_script:
 
 build:
   stage: build
-  image: docker:latest
+  image: docker:stable-dind
   services:
-    - docker:dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
+    - docker:stable-dind
   script:
     - docker info
     - docker build -t qcmapp .
