@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -73,5 +75,13 @@ public class AnswerService {
         result.setCommentCount(source.getComments().size());
         result.setStudentTestAnswerCount(source.getStudentTestAnswers().size());
         return result;
+    }
+
+    public List<Answer> getAllByQuestion(Long id) {
+        return this.answerRepository.findByQuestionId(id);
+    }
+
+    public List<Answer> getAll() {
+        return this.answerRepository.findAll();
     }
 }

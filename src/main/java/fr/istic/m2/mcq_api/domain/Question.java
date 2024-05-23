@@ -1,5 +1,7 @@
 package fr.istic.m2.mcq_api.domain;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class Question {
     @OneToMany(mappedBy = "question")
     private List<QuestionComment> comments = new ArrayList<>();
     @ManyToOne
+    @JsonIgnore
     private Qcm qcm;
     private String title;
     private boolean isActive;
@@ -25,4 +28,10 @@ public class Question {
     private int complexity;
     private LocalDateTime  creationDate;
     private LocalDateTime  updatedDate;
+
+
+    @JsonGetter("qcmId")
+    public Long getQcmId(){
+        return this.qcm.getId();
+    }
 }
