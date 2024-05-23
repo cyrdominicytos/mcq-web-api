@@ -24,6 +24,7 @@ public class LevelService {
         Level level = new Level();
         level.setClassOfStudy(levelDto.getClassOfStudy());
         level.setFieldOfStudy(levelDto.getFieldOfStudy());
+        level.setUpdatedDate(LocalDateTime.now());
         levelRepository.saveAndFlush(level);
         return  convertToLevelList(level);
     }
