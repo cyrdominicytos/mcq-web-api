@@ -37,7 +37,7 @@ deploy:
   image: alpine:latest
   script:
     - apk add --no-cache openssh
-    - ./add_ssh_key.sh
+    - sudo ./add_ssh_key.sh
     - docker save qcmapp | bzip2 | ssh -o StrictHostKeyChecking=no $SSH_USER@$VM_IPADDRESS 'bunzip2 | docker load'
     - ssh $SSH_USER@$VM_IPADDRESS 'docker-compose down && docker-compose up -d'
   only:
