@@ -32,7 +32,7 @@ public class AnswerController {
     }
 
     @GetMapping("/question/{id}")
-    public ResponseEntity<List<Answer>> getAllByQuestion(@PathVariable Long id){
+    public ResponseEntity<List<Answer>> getAllByQuestionId(@PathVariable Long id){
 
         return ResponseEntity.status(HttpStatus.OK).body(this.answerService.getAllByQuestion(id));
     }
