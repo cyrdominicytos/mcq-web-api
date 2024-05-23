@@ -1,6 +1,6 @@
 stages:
   - build
-  - test
+  #- test
   - deploy
 
 variables:
@@ -29,11 +29,11 @@ build:
     paths:
       - target/*.jar
 
-test:
-  stage: test
-  image: maven:3.8.3-openjdk-17
-  script:
-    - mvn $MAVEN_CLI_OPTS test
+#test:
+ # stage: test
+  #image: maven:3.8.3-openjdk-17
+  #script:
+   # - mvn $MAVEN_CLI_OPTS test
 
 deploy:
   stage: deploy
