@@ -98,11 +98,11 @@ public class QcmService {
 
 
 
-    public List<Question> parseQCM(String content, QcmDTO dto) throws ResourceNotFoundException {
-        //TODO Will be removed (make it dynamic : teacherId, levelId)
-        Teacher teacher = teacherRepository.findById(dto.getTeacherId()).orElseThrow(()-> new ResourceNotFoundException("Teacher", "id", dto.getTeacherId()));
-        Level level = levelRepository.findById(dto.getTeacherId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", dto.getLevelId()));
-        Qcm qcm = formatQcm(dto, null);
+    public List<Question> parseQCM(QcmWithTextDTO dto) throws ResourceNotFoundException {
+        String content = dto.getText();
+        Teacher teacher = teacherRepository.findById(dto.getDto().getTeacherId()).orElseThrow(()-> new ResourceNotFoundException("Teacher", "id", dto.getDto().getTeacherId()));
+        Level level = levelRepository.findById(dto.getDto().getLevelId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", dto.getDto().getLevelId()));
+        Qcm qcm = formatQcm(dto.getDto(), null);
         List<Question> questions = new ArrayList<>();
         String[] lines = content.split("\\r?\\n");
 

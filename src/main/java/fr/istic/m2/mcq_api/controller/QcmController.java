@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Question;
-import fr.istic.m2.mcq_api.dto.QcmCreateJSONDto;
-import fr.istic.m2.mcq_api.dto.QcmDTO;
-import fr.istic.m2.mcq_api.dto.QcmJSONDTO;
-import fr.istic.m2.mcq_api.dto.QcmListDTO;
+import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.QcmService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,9 +41,9 @@ public class QcmController {
         return ResponseEntity.status(HttpStatus.CREATED).body(qcm);
     }
 
-    @PostMapping("/parse")
-    public @ResponseBody ResponseEntity<Object> parseQCM(@RequestBody String text, @RequestBody QcmDTO qcmDTO){
-        List<Question> qcmList = this.qcmService.parseQCM(text, qcmDTO);
+    @PostMapping("/createQCMFromString")
+    public @ResponseBody ResponseEntity<Object> createQCMFromString(@RequestBody QcmWithTextDTO qcmDTO){
+        List<Question> qcmList = this.qcmService.parseQCM(qcmDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(qcmList.size());
     }
 
