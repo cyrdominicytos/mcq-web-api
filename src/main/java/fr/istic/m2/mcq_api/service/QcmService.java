@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -85,5 +86,9 @@ public class QcmService {
         result.setTitle(source.getTitle());
         result.setComplexity(source.getComplexity());
         return result;
+    }
+
+    public List<QcmListDTO> getAll() {
+        return this.qcmRepository.findAll().stream().map(QcmService::convertToListDto).toList();
     }
 }

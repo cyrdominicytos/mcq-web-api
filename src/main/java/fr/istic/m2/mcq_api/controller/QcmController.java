@@ -10,11 +10,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/qcm")
 public class QcmController {
     @Autowired
     private QcmService qcmService;
+
+
+    @GetMapping
+    public @ResponseBody ResponseEntity<List<QcmListDTO>> getAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAll());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<QcmListDTO> browse(@PathVariable Long id){
