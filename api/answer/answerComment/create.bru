@@ -5,17 +5,16 @@ meta {
 }
 
 post {
-  url: {{HOST}}/questions
+  url: {{HOST}}/comments/answers
   body: json
   auth: none
 }
 
 body:json {
   {
-    "qcmId": 1,
-    "complexity": 2,
-    "delay": 0,
-    "title": "Comment s'appelle Adama ?",
-    "active": true
+    "answerId": 1,
+    "suggestion": "Declaration variable",
+    "description": "Pas correcte",
+    "accepted": true
   }
 }

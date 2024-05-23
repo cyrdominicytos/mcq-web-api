@@ -23,7 +23,7 @@ public class AnswerComment {
     private LocalDateTime updatedDate;
 
     @JsonGetter("answerId")
-    public Long getAnswerId(){
+    public Long getCommentAnswerId(){
         return this.getId();
     }
 }

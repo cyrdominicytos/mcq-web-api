@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -71,5 +72,13 @@ public class AnswerCommentService {
 
     public void delete(Long id) {
         this.answerCommentRepository.deleteById(id);
+    }
+
+    public List<AnswerComment> getAllByAnswerId(Long id) {
+        return this.answerCommentRepository.findByAnswerId(id);
+    }
+
+    public List<AnswerComment> getAll() {
+        return this.answerCommentRepository.findAll();
     }
 }
