@@ -91,4 +91,8 @@ public class QcmService {
     public List<Qcm> getAll() {
         return this.qcmRepository.findAll();
     }
+
+    public List<Qcm> getAllTeacherId(Long id) {
+        return this.qcmRepository.findAllByTeacherId(id);
+    }
 }

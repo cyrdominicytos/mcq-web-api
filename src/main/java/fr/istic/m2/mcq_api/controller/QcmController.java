@@ -24,6 +24,11 @@ public class QcmController {
         return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAll());
     }
 
+    @GetMapping("/teacher/{id}")
+    public @ResponseBody ResponseEntity<List<Qcm>> getAllByTeacherId(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAllTeacherId(id));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<QcmListDTO> browse(@PathVariable Long id){
         QcmListDTO qcm = this.qcmService.read(id);

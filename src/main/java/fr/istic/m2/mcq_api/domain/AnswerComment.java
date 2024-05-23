@@ -24,6 +24,6 @@ public class AnswerComment {
 
     @JsonGetter("answerId")
     public Long getCommentAnswerId(){
-        return this.getId();
+        return this.getAnswer().getId();
     }
 }
