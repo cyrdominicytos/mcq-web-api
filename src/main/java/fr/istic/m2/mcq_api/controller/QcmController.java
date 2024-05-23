@@ -20,7 +20,7 @@ public class QcmController {
 
 
     @GetMapping
-    public @ResponseBody ResponseEntity<List<QcmListDTO>> getAll(){
+    public @ResponseBody ResponseEntity<List<Qcm>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAll());
     }
 

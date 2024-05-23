@@ -15,10 +15,13 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
+
     @OneToMany(mappedBy = "question")
     private List<QuestionComment> comments = new ArrayList<>();
+
     @ManyToOne
     @JsonIgnore
     private Qcm qcm;

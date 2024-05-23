@@ -88,7 +88,7 @@ public class QcmService {
         return result;
     }
 
-    public List<QcmListDTO> getAll() {
-        return this.qcmRepository.findAll().stream().map(QcmService::convertToListDto).toList();
+    public List<Qcm> getAll() {
+        return this.qcmRepository.findAll();
     }
 }
