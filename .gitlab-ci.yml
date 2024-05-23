@@ -38,4 +38,4 @@ deploy:
     - scp -o StrictHostKeyChecking=no target/*.jar $SSH_USER@$VM_IPADDRESS:/qcm_app
     - ssh $SSH_USER@$VM_IPADDRESS 'docker-compose down && docker-compose up -d'
   only:
-    - master
+    - cyr_dev
