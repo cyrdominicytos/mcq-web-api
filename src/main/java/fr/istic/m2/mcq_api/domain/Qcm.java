@@ -32,6 +32,6 @@ public class Qcm {
     private boolean isRandomActive = false;
     private LocalDateTime openStartDate;
     private LocalDateTime closeStartDate;
-    private LocalDateTime creationDate;
+    private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
 }
