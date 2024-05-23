@@ -33,6 +33,7 @@ test:
   stage: test
   image: maven:3.8.3-openjdk-17
   script:
+    - apt-get update && apt-get install -y maven
     - mvn $MAVEN_CLI_OPTS test
 
 deploy:
