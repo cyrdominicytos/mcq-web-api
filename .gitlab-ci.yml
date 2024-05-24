@@ -16,9 +16,9 @@ deploy:
   image: alpine:latest
   script:
     - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && git pull"
-    - - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && ls -l"
+    - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && ls -l"
     - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && docker pull maven:latest"
-    - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && docker run maven:latest mvn $MAVEN_CLI_OPTS clean package -DskipTests"
+    - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && docker run maven:latest mvn -f pom.xml clean package -DskipTestss"
 
   only:
     - cyr_dev
