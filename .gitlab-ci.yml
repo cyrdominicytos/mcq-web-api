@@ -26,10 +26,11 @@ build:
     - echo "$SSH_PRIVATE_KEY"
     - docker info
     - docker build -t qcmapp .
+    - touch demo.txt
     - ping $VM_IPADDRESS -c 2
   artifacts:
     paths:
-      - target/*.jar
+      - target/
 
 #test:
  # stage: test
