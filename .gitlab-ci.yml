@@ -21,7 +21,6 @@ before_script:
 
 build:
   stage: build
-  # image: maven:3.8.3-openjdk-17
   script:
     - mvn $MAVEN_CLI_OPTS clean package -DskipTests
 
