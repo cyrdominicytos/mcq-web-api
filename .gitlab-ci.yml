@@ -15,8 +15,7 @@ deploy:
   stage: deploy
   image: alpine:latest
   script:
-    - ssh $SSH_USER@$VM_IPADDRESS cd /qcm_app && docker pull maven:lastest
-    - ssh $SSH_USER@$VM_IPADDRESS docker pull maven:lastest
+    - ssh $SSH_USER@$VM_IPADDRESS cd /qcm_app && docker pull maven:latest
     - ssh $SSH_USER@$VM_IPADDRESS docker run maven:latest mvn $MAVEN_CLI_OPTS clean package -DskipTests
 
   only:
