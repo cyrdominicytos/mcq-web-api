@@ -36,8 +36,6 @@ build:
 deploy:
   stage: deploy
   image: alpine:latest
-  #before_script:
-   # - apk add --no-cache openssh
   script:
     - ls target
     - echo "Before compression"
