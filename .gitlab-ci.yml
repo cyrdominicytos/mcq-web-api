@@ -3,6 +3,7 @@ stages:
   #- test
   - deploy
 
+image: maven:latest
 variables:
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -19,7 +20,7 @@ before_script:
 
 build:
   stage: build
-  image: maven:3.8.3-openjdk-17
+  # image: maven:3.8.3-openjdk-17
   script:
     - mvn $MAVEN_CLI_OPTS clean package -DskipTests
   artifacts:
