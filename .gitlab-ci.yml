@@ -4,6 +4,7 @@ stages:
   - deploy
 
 image: maven:latest
+
 variables:
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -23,6 +24,7 @@ build:
   # image: maven:3.8.3-openjdk-17
   script:
     - mvn $MAVEN_CLI_OPTS clean package -DskipTests
+
   artifacts:
     paths:
       - target/
@@ -39,8 +41,16 @@ deploy:
   #before_script:
    # - apk add --no-cache openssh
   script:
-    - ssh $SSH_USER@$VM_IPADDRESS 'docker-compose down && docker-compose up'
-    #- scp -o StrictHostKeyChecking=no target/*.jar $SSH_USER@$VM_IPADDRESS:/qcm_app
-    #- ssh $SSH_USER@$VM_IPADDRESS 'docker-compose down && docker-compose up'
+    - cp *.jar qcmapp.jar
+    - scp -o StrictHostKeyChecking=no qcmapp.jar $SSH_USER@$VM_IPADDRESS:/qcm_app
+    - ssh $SSH_USER@$VM_IPADDRESS 'java -jar /qcm_app/qcmapp.jar'
+
+  dependencies:
+    - build
+
+  artifacts:
+    paths:
+      - demo/
+
   only:
     - cyr_dev
