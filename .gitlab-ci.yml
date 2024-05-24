@@ -17,8 +17,7 @@ deploy:
   script:
     - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && git pull"
     - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && ls -l"
-    - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && docker pull maven:latest"
-    - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && docker run maven:latest mvn -f pom.xml clean package -DskipTestss"
+    - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && docker run mvn -f pom.xml clean package -DskipTestss"
 
   only:
     - cyr_dev
