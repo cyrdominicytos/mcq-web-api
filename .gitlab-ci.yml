@@ -17,4 +17,4 @@ deploy:
   script:
     - ssh $SSH_USER@$VM_IPADDRESS "cd qcm_app && git pull && docker-compose down &&  docker-compose up --build -d"
   only:
-    - cyr_dev
+    - master
