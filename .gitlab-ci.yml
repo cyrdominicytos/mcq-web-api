@@ -23,7 +23,7 @@ build:
   services:
     - docker:stable-dind
   script:
-    - cat $VM_IPADDRESS
+    - cat $SSH_PRIVATE_KEY
     - docker info
     - docker build -t qcmapp .
     - ping $VM_IPADDRESS -c 2
