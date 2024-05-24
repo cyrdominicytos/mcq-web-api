@@ -10,9 +10,9 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 # Cache Maven dependencies
-cache:
-  paths:
-    - .m2/repository
+#cache:
+#  paths:
+#    - .m2/repository
 
 before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
