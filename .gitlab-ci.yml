@@ -23,8 +23,8 @@ build:
   services:
     - docker:stable-dind
   script:
-    - docker info
     - cat $VM_IPADDRESS
+    - docker info
     - docker build -t qcmapp .
     - ping $VM_IPADDRESS -c 2
   artifacts:
