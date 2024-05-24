@@ -1,54 +1,23 @@
 stages:
-  - build
-  #- test
   - deploy
 
 variables:
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
-# Cache Maven dependencies
-#cache:
-#  paths:
-#    - .m2/repository
-
 before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   - eval $(ssh-agent -s)
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
 
-build:
-  stage: build
-  image: maven:latest
-  script:
-    - mvn $MAVEN_CLI_OPTS clean package -DskipTests
-
-  artifacts:
-    paths:
-      - target/
-
-#test:
- # stage: test
-  #image: maven:3.8.3-openjdk-17
-  #script:
-   # - mvn $MAVEN_CLI_OPTS test
 
 deploy:
   stage: deploy
   image: alpine:latest
   script:
-    - ls target
-    - echo "Before compression"
-    - cp target/*.jar qcmapp.jar
-    - scp -o StrictHostKeyChecking=no qcmapp.jar $SSH_USER@$VM_IPADDRESS:/qcm_app
-    - ssh $SSH_USER@$VM_IPADDRESS 'java -jar /qcm_app/qcmapp.jar'
-
-  dependencies:
-    - build
-
-  artifacts:
-    paths:
-      - demo/
+    - ssh $SSH_USER@$VM_IPADDRESS cd /qcm_app && docker pull maven:lastest &&
+    - ssh $SSH_USER@$VM_IPADDRESS docker pull maven:lastest
+    - ssh $SSH_USER@$VM_IPADDRESS docker run maven:latest mvn $MAVEN_CLI_OPTS clean package -DskipTests
 
   only:
     - cyr_dev
