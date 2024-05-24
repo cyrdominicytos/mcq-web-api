@@ -19,11 +19,24 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/qcm")
 public class QcmController {
     @Autowired
     private QcmService qcmService;
+
+
+    @GetMapping
+    public @ResponseBody ResponseEntity<List<Qcm>> getAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAll());
+    }
+
+    @GetMapping("/teacher/{id}")
+    public @ResponseBody ResponseEntity<List<Qcm>> getAllByTeacherId(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAllTeacherId(id));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<QcmListDTO> browse(@PathVariable Long id){

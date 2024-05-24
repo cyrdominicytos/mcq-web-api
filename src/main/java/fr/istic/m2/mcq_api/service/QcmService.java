@@ -2,7 +2,6 @@ package fr.istic.m2.mcq_api.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fr.istic.m2.mcq_api.domain.*;
 import fr.istic.m2.mcq_api.dto.*;
@@ -11,13 +10,11 @@ import fr.istic.m2.mcq_api.repository.*;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,8 +92,6 @@ public class QcmService {
         result.setComplexity(source.getComplexity());
         return result;
     }
-
-
 
     public List<Question> parseQCM(QcmWithTextDTO dto) throws ResourceNotFoundException {
         String content = dto.getText();
@@ -272,5 +267,13 @@ public class QcmService {
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper.readValue(json, QcmJSONDTO.class);
+    }
+    public List<Qcm> getAll() {
+        return this.qcmRepository.findAll();
+    }
+
+    public List<Qcm> getAllTeacherId(Long id) {
+        return this.qcmRepository.findAllByTeacherId(id);
+
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/answer")
 public class AnswerController {
@@ -22,6 +24,17 @@ public class AnswerController {
             throw new ResourceNotFoundException("answer not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(answer);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Answer>> getAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.answerService.getAll());
+    }
+
+    @GetMapping("/question/{id}")
+    public ResponseEntity<List<Answer>> getAllByQuestionId(@PathVariable Long id){
+
+        return ResponseEntity.status(HttpStatus.OK).body(this.answerService.getAllByQuestion(id));
     }
 
     @PostMapping

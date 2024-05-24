@@ -1,5 +1,6 @@
 package fr.istic.m2.mcq_api.controller;
 
+import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.QuestionDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/questions")
@@ -24,6 +27,18 @@ public class QuestionController {
             throw new ResourceNotFoundException("question not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(question);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Question>> getAllB(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.questionService.getAll());
+    }
+
+
+    @GetMapping("/qcm/{id}")
+    public ResponseEntity<List<Question>> getAllByQcm(@PathVariable Long id){
+
+        return ResponseEntity.status(HttpStatus.OK).body(this.questionService.getAllByQcm(id));
     }
 
     @PostMapping

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -61,4 +63,11 @@ public class QuestionService {
     }
 
 
+    public List<Question> getAllByQcm(Long id) {
+        return new ArrayList<>();
+    }
+
+    public List<Question> getAll() {
+        return this.questionRepository.findAll();
+    }
 }

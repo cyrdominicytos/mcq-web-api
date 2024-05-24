@@ -1,5 +1,7 @@
 package fr.istic.m2.mcq_api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,13 +26,21 @@ public class StudentTest {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
+    @JsonIgnore
     private Student student;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "qcm_id")
+    @JsonIgnore
     private Qcm qcm;
 
     @OneToMany(mappedBy = "studentTest", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<StudentTestAnswer> studentTestAnswer = new ArrayList<>();
+
+    @JsonSetter("qmcId")
+    public Long getStudentQcmId(){
+        return this.qcm.getId();
+    }
 
 }

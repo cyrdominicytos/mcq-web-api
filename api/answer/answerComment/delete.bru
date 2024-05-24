@@ -1,0 +1,21 @@
+meta {
+  name: delete
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{HOST}}/delete/6
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "qcmId": 1,
+    "complexity": 2,
+    "delay": 0,
+    "title": "Comment s'appelle Adama ?",
+    "active": true
+  }
+}

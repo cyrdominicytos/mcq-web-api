@@ -1,11 +1,16 @@
 package fr.istic.m2.mcq_api.domain;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fr.istic.m2.mcq_api.dto.LevelDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -14,8 +19,10 @@ public class Qcm {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JsonIgnore
     private Level level;
     @ManyToOne
+    @JsonIgnore
     private Teacher teacher;
 
     @OneToMany(mappedBy = "qcm",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -34,4 +41,15 @@ public class Qcm {
     private LocalDateTime closeStartDate;
     private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
+
+
+    @JsonGetter("teacherId")
+    public Long getQcmTeacher(){
+        return this.teacher.getId();
+    }
+
+    @JsonGetter("level")
+    public Map<String,  Object> qcmLevel() {
+        return (new LevelDto()).toMap(this.level);
+    }
 }
