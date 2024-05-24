@@ -1,0 +1,20 @@
+meta {
+  name: create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{HOST}}/comments/answers
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "answerId": 1,
+    "suggestion": "Comme ça",
+    "description": "Hahaha",
+    "accepted": true
+  }
+}

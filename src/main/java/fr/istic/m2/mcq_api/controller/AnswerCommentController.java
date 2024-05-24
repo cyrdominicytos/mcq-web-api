@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpClient;
+import java.util.List;
 
 @RestController
 @RequestMapping("/comments/answers")
@@ -21,13 +22,15 @@ public class AnswerCommentController {
     private AnswerCommentService commentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnswerComment> browse(@PathVariable Long id){
-        AnswerComment comment = this.commentService.read(id);
-        if (comment == null){
-            throw new ResourceNotFoundException("User not found");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(comment);
+    public ResponseEntity<List<AnswerComment>> getAllByAnswer(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(this.commentService.getAllByAnswerId(id));
     }
+
+    @GetMapping
+    public ResponseEntity<List<AnswerComment>> getAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.commentService.getAll());
+    }
+
 
     @PostMapping
     public @ResponseBody ResponseEntity<AnswerComment> create(@RequestBody AnswerCommentDTO answerCommentDTO){

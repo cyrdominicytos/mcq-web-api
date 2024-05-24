@@ -1,0 +1,21 @@
+meta {
+  name: update
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{HOST}}/update/6
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "qcmId": 1,
+    "complexity": 2,
+    "delay": 0,
+    "title": "Comment s'appelle Adama ?",
+    "active": true
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: read
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{HOST}}/answer
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "qcmId": 1,
+    "complexity": 2,
+    "delay": 0,
+    "title": "Comment s'appelle Adama ?",
+    "active": true
+  }
+}

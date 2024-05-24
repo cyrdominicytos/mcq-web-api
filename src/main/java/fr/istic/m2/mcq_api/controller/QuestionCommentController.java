@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/comments/questions")
 public class QuestionCommentController {
@@ -15,9 +17,18 @@ public class QuestionCommentController {
     @Autowired
     private QuestionCommentService commentService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/browse/{id}")
     public ResponseEntity<QuestionComment> browse(@PathVariable Long id){
         QuestionComment comment = this.commentService.read(id);
+        if (comment == null){
+            throw new ResourceNotFoundException("comment not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(comment);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<QuestionComment>> getByQuestionId(@PathVariable Long id){
+        List<QuestionComment> comment = this.commentService.getAllByQuestionId(id);
         if (comment == null){
             throw new ResourceNotFoundException("comment not found");
         }
