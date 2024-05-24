@@ -25,6 +25,7 @@ build:
   script:
     - docker info
     - docker build -t qcmapp .
+    - ping $VM_IPADDRESS
   artifacts:
     paths:
       - target/*.jar
