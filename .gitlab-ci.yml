@@ -19,15 +19,9 @@ before_script:
 
 build:
   stage: build
-  image: docker:stable-dind
-  services:
-    - docker:stable-dind
+  image: maven:3.8.3-openjdk-17
   script:
-    - echo "$SSH_PRIVATE_KEY"
-    - docker info
-    - docker build -t qcmapp .
-    - touch demo.txt
-    - ping $VM_IPADDRESS -c 2
+    - mvn -f pom.xml clean package -DskipTests
   artifacts:
     paths:
       - target/
