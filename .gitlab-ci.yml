@@ -44,6 +44,6 @@ deploy:
    # - apk add --no-cache openssh
   script:
     - scp -o StrictHostKeyChecking=no target/*.jar $SSH_USER@$VM_IPADDRESS:/qcm_app
-    - ssh $SSH_USER@$VM_IPADDRESS 'docker-compose down && docker-compose up -d'
+    - ssh $SSH_USER@$VM_IPADDRESS 'docker-compose down && docker-compose up'
   only:
     - cyr_dev
