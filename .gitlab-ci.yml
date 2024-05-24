@@ -3,8 +3,6 @@ stages:
   #- test
   - deploy
 
-image: maven:latest
-
 variables:
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -43,7 +41,6 @@ deploy:
   script:
     - ls target
     - echo "Before compression"
-    - echo "Before compression 2"
     - cp target/*.jar qcmapp.jar
     - scp -o StrictHostKeyChecking=no qcmapp.jar $SSH_USER@$VM_IPADDRESS:/qcm_app
     - ssh $SSH_USER@$VM_IPADDRESS 'java -jar /qcm_app/qcmapp.jar'
