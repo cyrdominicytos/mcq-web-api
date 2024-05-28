@@ -62,9 +62,7 @@ public class AnswerController {
 
     @PostMapping("/qcm/{id}")
     public @ResponseBody ResponseEntity<AnswerQcmDTO> answerQcm(@PathVariable Long id, @RequestBody AnswerQcmDTO answers){
-        Integer total = this.scoreService.getStudentTotalValidAnswer(answers);
-        System.out.println("total: "+total);
-        //this.answerService.answersQcm(id, answers);
+        this.answerService.answersQcm(id, answers);
         return ResponseEntity.status(HttpStatus.OK).body(answers);
     }
 }

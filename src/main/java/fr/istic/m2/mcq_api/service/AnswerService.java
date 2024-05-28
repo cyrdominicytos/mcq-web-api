@@ -5,6 +5,7 @@ import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class AnswerService {
     private final StudentRepository studentRepository;
     private final StudentTestRepository studentTestRepository;
     private final ScoreService scoreService;
+    private final ScoreRepository scoreRepository;
 
 
     @Autowired
@@ -30,12 +32,14 @@ public class AnswerService {
             QcmRepository qcmRepository,
             StudentRepository studentRepository,
             StudentTestRepository studentTestRepository,
-            ScoreService scoreService
+            ScoreService scoreService,
+            ScoreRepository scoreRepository
             ){
         this.qcmRepository = qcmRepository;
         this.studentRepository = studentRepository;
         this.studentTestRepository = studentTestRepository;
         this.scoreService = scoreService;
+        this.scoreRepository = scoreRepository;
     }
 
     public Answer read(Long id) {
@@ -133,11 +137,18 @@ public class AnswerService {
             studentTestAnswer.setDuration(q.getDuration());
             studentTest.getStudentTestAnswer().add(studentTestAnswer); // Add each student answer
         }
-
         this.studentTestRepository.saveAndFlush(studentTest);
+        this.saveScore(qcm, student, answers);
+    }
 
-
-
+    public void saveScore(Qcm qcm, Student student, AnswerQcmDTO answers){
+        Integer totalValidAnswer = this.scoreService.getStudentTotalValidAnswer(answers);
+        Score score = new Score();
+        score.setQcm(qcm);
+        score.setStudent(student);
+        score.setTotalValidAnswer(totalValidAnswer);
+        score.setTotalQuestion(qcm.getQuestions().size());
+        this.scoreRepository.saveAndFlush(score);
     }
 
 
