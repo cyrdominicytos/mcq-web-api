@@ -18,7 +18,8 @@ import java.util.Optional;
 @Service
 public class AnswerCommentService {
     @Autowired
-    private AnswerCommentRepository answerCommentRepository;
+    private
+    AnswerCommentRepository answerCommentRepository;
     @Autowired
     private AnswerRepository answerRepository;
 
