@@ -22,17 +22,20 @@ public class AnswerService {
     private final QcmRepository qcmRepository;
     private final StudentRepository studentRepository;
     private final StudentTestRepository studentTestRepository;
+    private final ScoreService scoreService;
 
 
     @Autowired
     public AnswerService(
             QcmRepository qcmRepository,
             StudentRepository studentRepository,
-            StudentTestRepository studentTestRepository
+            StudentTestRepository studentTestRepository,
+            ScoreService scoreService
             ){
         this.qcmRepository = qcmRepository;
         this.studentRepository = studentRepository;
         this.studentTestRepository = studentTestRepository;
+        this.scoreService = scoreService;
     }
 
     public Answer read(Long id) {
@@ -101,13 +104,16 @@ public class AnswerService {
     public void answersQcm(Long id, AnswerQcmDTO answers) throws ResourceNotFoundException {
         Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Qcmid= "+id+" not not found"));
         Student student = this.studentRepository.findById(answers.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Student id not found"));
+
         List<QuestionAnswerDTO> questionAnswerDTOs = answers.getAnswers();
+
         for(QuestionAnswerDTO q : questionAnswerDTOs){
             boolean matched = this.isAnswerMatchWithQuestion(q);
             if (!matched){
                 throw new ResourceNotFoundException(String.format("questionId=%d not matching with answerId=%d", q.getQuestionId(), q.getAnswerId()));
             }
         }
+
         StudentTest studentTest = new StudentTest();
         studentTest.setQcm(qcm);
         studentTest.setStudent(student);
@@ -129,6 +135,8 @@ public class AnswerService {
         }
 
         this.studentTestRepository.saveAndFlush(studentTest);
+
+
 
     }
 
