@@ -13,6 +13,6 @@ public class Score {
     private Qcm qcm;
     @ManyToOne
     private Student student;
-    private Integer totalValidAnswer;
+    private Integer totalValidQuestion;
     private Integer totalQuestion;
 }

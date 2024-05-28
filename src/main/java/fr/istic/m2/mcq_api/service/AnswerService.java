@@ -146,7 +146,7 @@ public class AnswerService {
         Score score = new Score();
         score.setQcm(qcm);
         score.setStudent(student);
-        score.setTotalValidAnswer(totalValidAnswer);
+        score.setTotalValidQuestion(totalValidAnswer);
         score.setTotalQuestion(qcm.getQuestions().size());
         this.scoreRepository.saveAndFlush(score);
     }
