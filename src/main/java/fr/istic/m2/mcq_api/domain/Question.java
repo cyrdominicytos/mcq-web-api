@@ -34,7 +34,7 @@ public class Question {
 
 
     @JsonGetter("qcmId")
-    public Long getQcmId(){
+    public Long getQuestionQcmId(){
         return this.qcm.getId();
     }
 }

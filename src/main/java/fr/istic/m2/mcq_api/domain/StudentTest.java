@@ -31,7 +31,6 @@ public class StudentTest {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "qcm_id")
-    @JsonIgnore
     private Qcm qcm;
 
     @OneToMany(mappedBy = "studentTest", cascade = CascadeType.ALL)

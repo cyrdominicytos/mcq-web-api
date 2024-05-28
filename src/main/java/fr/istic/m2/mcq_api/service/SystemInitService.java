@@ -99,7 +99,7 @@ public class SystemInitService {
         }
 
         Qcm qcm =   this.qcmRepository.findById(qcmId).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id",0 ));
-        List<Question> questions = questionRepository.findAllByQcmId(qcm.getId());
+        List<Question> questions = questionRepository.findQuestionByQcmId(qcm.getId());
 
         if(!questions.isEmpty()){
             //Create StudentTest
@@ -110,16 +110,16 @@ public class SystemInitService {
             studentTestRepository.saveAndFlush(studentTest);
 
             for(Question q : questions){
-                List<Answer> answers = answerRepository.findAllByQuestionId(q.getId());
+                List<Answer> answers = answerRepository.findByQuestionId(q.getId());
                 if(answers.isEmpty())
                     throw new Exception("Saved without studentTestAnswer because of answer");
+
                 //Create StudentTestAnswer
                 StudentTestAnswer studentTestAnswer = new StudentTestAnswer();
                 studentTestAnswer.setDuration(new Random().nextInt(20));
                 studentTestAnswer.setAnswer(answers.get(0));
                 studentTestAnswer.setStudentTest(studentTest);
                 studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
-
             }
         } else throw new Exception("Saved without StudentTest because of question");
     }
