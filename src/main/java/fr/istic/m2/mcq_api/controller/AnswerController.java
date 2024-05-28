@@ -2,6 +2,7 @@ package fr.istic.m2.mcq_api.controller;
 
 import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.dto.AnswerDTO;
+import fr.istic.m2.mcq_api.dto.AnswerQcmDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,12 @@ public class AnswerController {
     public @ResponseBody ResponseEntity<Void> delete(@PathVariable Long id){
         this.answerService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+
+    @PostMapping("/qcm/{id}")
+    public @ResponseBody ResponseEntity<AnswerQcmDTO> answerQcm(@PathVariable Long id, @RequestBody AnswerQcmDTO answers){
+        this.answerService.answersQcm(id, answers);
+        return ResponseEntity.status(HttpStatus.OK).body(answers);
     }
 }

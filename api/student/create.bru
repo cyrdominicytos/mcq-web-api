@@ -1,0 +1,20 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{HOST}}/students
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "uuid": "00933",
+    "firstName": "Tuo",
+    "lastName":"Adama",
+    "levelId": 1
+  }
+}

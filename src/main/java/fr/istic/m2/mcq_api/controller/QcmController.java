@@ -8,6 +8,7 @@ import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.QcmService;
+import fr.istic.m2.mcq_api.service.statistic.QuestionStatisticService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,12 @@ public class QcmController {
     @Autowired
     private QcmService qcmService;
 
+    private final QuestionStatisticService statsService;
+
+    @Autowired
+    public QcmController(QuestionStatisticService statsService){
+        this.statsService = statsService;
+    }
 
     @GetMapping
     public @ResponseBody ResponseEntity<List<Qcm>> getAll(){
@@ -103,6 +110,12 @@ public class QcmController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON: " + e.getMessage());
         }
+    }
+
+
+    @GetMapping("/statistics/{id}")
+    public ResponseEntity<Object> getStatistic(@PathVariable Long id){
+        return  ResponseEntity.status(HttpStatus.OK).body(this.statsService.getQcmStat(id));
     }
 
 }
