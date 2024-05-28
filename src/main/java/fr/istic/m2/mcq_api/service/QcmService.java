@@ -262,6 +262,56 @@ public class QcmService {
         return convertToListDto(qcm);
     }
 
+    /**
+     * Create a QCM form a given  a Yaml content
+     * @param content
+     * @param dto
+     * @return
+     * @throws IOException
+     */
+    public QcmListDTO createQCMFromYaml(String content, QcmDTO dto) throws Exception {
+        List<QuestionYamlDTO> questions = YamlParserService.parseYaml(content);
+        if(questions.isEmpty())
+            throw new ResourceNotFoundException("Invalid format: missing qcm: ");
+
+        Teacher teacher = teacherRepository.findById(dto.getTeacherId()).orElseThrow(()-> new ResourceNotFoundException("Teacher", "id", dto.getTeacherId()));
+        Level level = levelRepository.findById(dto.getLevelId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", dto.getLevelId()));
+
+        Qcm qcm = new Qcm();
+        qcm.setTitle(dto.getTitle());
+        qcm.setActive(dto.isActive());
+        qcm.setComplexity(dto.getComplexity());
+        qcm.setDelay(dto.getDelay());
+        qcm.setRandomActive(dto.isRandomActive());
+        qcm.setLimitQuestion(dto.getLimitQuestion());
+        qcm.setOpenStartDate(dto.getOpenStartDate());
+        qcm.setCloseStartDate(dto.getCloseStartDate());
+        qcm.setLevel(level);
+        qcm.setTeacher(teacher);
+
+        //create Questions
+        List<Answer> answerList = new ArrayList<>();
+        List<Question> questionList = new ArrayList<>();
+
+        for (QuestionYamlDTO q : questions)
+        {
+            Question question = new Question();
+            question.setQcm(qcm);
+            questionList.add(question);
+            answerList.addAll(QuestionYamlDTO.formatQuestion(q, question));
+
+        }
+
+        if(!questionList.isEmpty()){
+            System.out.println("==============Question count "+questionList.size());
+            System.out.println("==============Answer count "+answerList.size());
+            qcmRepository.saveAndFlush(qcm);
+            questionRepository.saveAllAndFlush(questionList);
+            answerRepository.saveAllAndFlush(answerList);
+        }
+        return convertToListDto(qcm);
+    }
+
     public QcmJSONDTO parseQCMFromJSON(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());

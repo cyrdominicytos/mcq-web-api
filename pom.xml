@@ -86,6 +86,14 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.13.3</version>
 		</dependency>
+		<!--format form Yaml dependency-->
+		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>2.2</version>
+		</dependency>
+
 	</dependencies>
 
                 <build>

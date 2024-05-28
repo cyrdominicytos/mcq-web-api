@@ -10,6 +10,7 @@ import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.QcmService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import java.util.List;
@@ -58,6 +60,38 @@ public class QcmController {
     public @ResponseBody ResponseEntity<Object> createQCMFromString(@RequestBody QcmWithTextDTO qcmDTO){
         List<Question> qcmList = this.qcmService.parseQCM(qcmDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(qcmList.size());
+    }
+    @PostMapping("/createQCMFromYamlString")
+    public @ResponseBody ResponseEntity<Object> createQCMFromYamlString(@RequestParam("file") MultipartFile file,
+                                                                        @RequestParam Long levelId,
+                                                                        @RequestParam Long teacherId,
+                                                                        @RequestParam int limitQuestion,
+                                                                        @RequestParam int delay,
+                                                                        @RequestParam String title,
+                                                                        @RequestParam int complexity,
+                                                                        @RequestParam boolean isRandomActive,
+                                                                        @RequestParam boolean isActive,
+                                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
+                                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate){
+        QcmDTO qcmRequest = new QcmDTO();
+        qcmRequest.setLevelId(levelId);
+        qcmRequest.setTeacherId(teacherId);
+        qcmRequest.setLimitQuestion(limitQuestion);
+        qcmRequest.setDelay(delay);
+        qcmRequest.setTitle(title);
+        qcmRequest.setComplexity(complexity);
+        qcmRequest.setRandomActive(isRandomActive);
+        qcmRequest.setActive(isActive);
+        qcmRequest.setOpenStartDate(openStartDate);
+        qcmRequest.setCloseStartDate(closeStartDate);
+
+        try {
+            String yamlContent = new String(file.getBytes());
+           QcmListDTO qcmList = this.qcmService.createQCMFromYaml(yamlContent, qcmRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(qcmList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format invalid : "+e.getMessage());
+        }
     }
 
     @PutMapping("/update/{id}")
