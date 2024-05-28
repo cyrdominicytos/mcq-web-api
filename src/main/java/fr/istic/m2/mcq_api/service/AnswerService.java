@@ -97,13 +97,13 @@ public class AnswerService {
     }
 
     public void answersQcm(Long id, AnswerQcmDTO answers) throws ResourceNotFoundException {
-        Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Qcm id not not found"));
+        Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Qcmid= "+id+" not not found"));
         Student student = this.studentRepository.findById(answers.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Student id not found"));
         List<QuestionAnswerDTO> questionAnswerDTOs = answers.getAnswers();
         for(QuestionAnswerDTO q : questionAnswerDTOs){
             boolean matched = this.isAnswerMatchWithQuestion(q);
             if (!matched){
-                throw new ResourceNotFoundException(String.format("Question %d not matching with %d", q.getQuestionId(), q.getAnswerId()));
+                throw new ResourceNotFoundException(String.format("questionId=%d not matching with answerId=%d", q.getQuestionId(), q.getAnswerId()));
             }
         }
         StudentTest studentTest = new StudentTest();
@@ -118,6 +118,7 @@ public class AnswerService {
         for(QuestionAnswerDTO q : questionAnswerDTOs){
             StudentTestAnswer studentTestAnswer = new StudentTestAnswer();
             Answer answer = this.answerRepository.findById(q.getAnswerId()).get();
+            studentTestAnswer.setStudentTest(studentTest);
             studentTestAnswer.setAnswer(answer);
             studentTestAnswer.setCreationDate(now);
             studentTestAnswer.setUpdatedDate(now);
