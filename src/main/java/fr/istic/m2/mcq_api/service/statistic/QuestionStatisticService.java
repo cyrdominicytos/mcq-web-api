@@ -37,9 +37,11 @@ public class QuestionStatisticService {
     public List<AnswerStatDTO> getQuestionStats(Long id){
         Question question = questionService.read(id);
         List<Answer> answers = question.getAnswers();
+        if (answers.size() == 0){
+            return null;
+        }
         List< StudentTestAnswer> studentTestAnswers = this.testAnswerRepository.findByAnswerIn(answers);
         Integer totalAnswer = studentTestAnswers.size();
-
         if (totalAnswer == 0){
             return null;
         }

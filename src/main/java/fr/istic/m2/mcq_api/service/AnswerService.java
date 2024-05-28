@@ -52,9 +52,11 @@ public class AnswerService {
         Answer answer = this.answerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Answer", "id", id));
         Question question = this.questionRepository.findById(answerDTO.getQuestionId()).orElseThrow(()-> new ResourceNotFoundException("Question", "id", answerDTO.getQuestionId()));
         answer.setValid(answerDTO.isValid());
+        answer.setActive(answerDTO.isActive());
         answer.setNbrPoint(answerDTO.getNbrPoint());
         answer.setQuestion(question);
         answer.setUpdatedDate(LocalDateTime.now());
+        this.answerRepository.saveAndFlush(answer);
         return answer;
     }
 

@@ -5,17 +5,22 @@ meta {
 }
 
 put {
-  url: {{HOST}}/update/6
+  url: {{HOST}}/questions/update/6
   body: json
   auth: none
 }
 
 body:json {
   {
-    "qcmId": 1,
-    "complexity": 2,
-    "delay": 0,
+    "id": 6,
+    "answers": [],
+    "comments": [],
     "title": "Comment s'appelle Adama ?",
-    "active": true
+    "delay": 0,
+    "complexity": 2,
+    "creationDate": "2024-05-23T17:19:03.443077",
+    "updatedDate": "2024-05-23T17:19:03.443099",
+    "active": true,
+    "qcmId": 1
   }
 }
