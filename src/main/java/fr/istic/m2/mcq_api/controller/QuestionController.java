@@ -1,12 +1,9 @@
 package fr.istic.m2.mcq_api.controller;
 
-import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.AnswerStatDTO;
-import fr.istic.m2.mcq_api.dto.QuestionAnswerDTO;
 import fr.istic.m2.mcq_api.dto.QuestionDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
-import fr.istic.m2.mcq_api.service.QuestionService;
 import fr.istic.m2.mcq_api.service.QuestionService;
 import fr.istic.m2.mcq_api.service.statistic.QuestionStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;

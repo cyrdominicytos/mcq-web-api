@@ -5,10 +5,12 @@ import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.AnswerQcmDTO;
+import fr.istic.m2.mcq_api.dto.QcmStatDTO;
 import fr.istic.m2.mcq_api.dto.QuestionAnswerDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.AnswerRepository;
 import fr.istic.m2.mcq_api.repository.QcmRepository;
+import fr.istic.m2.mcq_api.repository.ScoreRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,10 +21,15 @@ public class ScoreService {
 
     private final QcmRepository qcmRepository;
     private final AnswerRepository answerRepository;
+    private final ScoreRepository scoreRepository;
 
-    public ScoreService(QcmRepository qcmRepository, AnswerRepository answerRepository){
+    public ScoreService(QcmRepository qcmRepository,
+                        AnswerRepository answerRepository,
+                        ScoreRepository scoreRepository
+                        ){
         this.qcmRepository = qcmRepository;
         this.answerRepository = answerRepository;
+        this.scoreRepository = scoreRepository;
     }
 
     public Integer getQcmTotalValidAnswer(Long qcmId){
@@ -58,16 +65,28 @@ public class ScoreService {
         return total;
     }
 
+    /**
+     * @param answers
+     * @return 1 answer is correct of 0 when there is an incorrect answer
+     */
+
     private Integer getQuestionTotal(List<QuestionAnswerDTO> answers){
-        Integer total = 0;
         for (QuestionAnswerDTO answerDTO : answers){
             Answer answer = this.answerRepository.findById(answerDTO.getAnswerId()).get();
             if (!answer.isValid()){
                 return 0;
             }
-            total += 1;
         }
-        return total;
+        return 1;
+    }
+
+    public QcmStatDTO getQcmStats(Long id){
+        Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("qcmid=%d not found", id)));
+        QcmStatDTO statDTO = new QcmStatDTO();
+        statDTO.setHighScore(this.scoreRepository.getTheHighScoreByQcmId(qcm.getId()));
+        statDTO.setMinScore(this.scoreRepository.getMinScoreByQcmId(qcm.getId()));
+        statDTO.setAverageScore(scoreRepository.getAverageScoreByQcmId(qcm.getId()));
+        return statDTO;
     }
 
 }

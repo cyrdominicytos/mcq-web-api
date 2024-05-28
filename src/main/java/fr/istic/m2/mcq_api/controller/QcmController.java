@@ -8,6 +8,7 @@ import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.QcmService;
+import fr.istic.m2.mcq_api.service.ScoreService;
 import fr.istic.m2.mcq_api.service.statistic.QuestionStatisticService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ import java.util.List;
 public class QcmController {
     @Autowired
     private QcmService qcmService;
+    @Autowired
+    private ScoreService scoreService;
 
     private final QuestionStatisticService statsService;
 
@@ -114,8 +117,8 @@ public class QcmController {
 
 
     @GetMapping("/statistics/{id}")
-    public ResponseEntity<Object> getStatistic(@PathVariable Long id){
-        return  ResponseEntity.status(HttpStatus.OK).body(this.statsService.getQcmStat(id));
+    public ResponseEntity<QcmStatDTO> getStatistic(@PathVariable Long id){
+        return  ResponseEntity.status(HttpStatus.OK).body(this.scoreService.getQcmStats(id));
     }
 
 }
