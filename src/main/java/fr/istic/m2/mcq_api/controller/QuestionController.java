@@ -2,10 +2,13 @@ package fr.istic.m2.mcq_api.controller;
 
 import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.domain.Question;
+import fr.istic.m2.mcq_api.dto.AnswerStatDTO;
+import fr.istic.m2.mcq_api.dto.QuestionAnswerDTO;
 import fr.istic.m2.mcq_api.dto.QuestionDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.QuestionService;
 import fr.istic.m2.mcq_api.service.QuestionService;
+import fr.istic.m2.mcq_api.service.statistic.QuestionStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,11 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
+    private final QuestionStatisticService questionStatisticService;
+
+    QuestionController(QuestionStatisticService questionStatisticService){
+        this.questionStatisticService = questionStatisticService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Question> browse(@PathVariable Long id){
@@ -56,5 +64,10 @@ public class QuestionController {
     public @ResponseBody ResponseEntity<Void> delete(@PathVariable Long id){
         this.questionService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @GetMapping("/statistics/{id}")
+    public @ResponseBody ResponseEntity<List<AnswerStatDTO>> questionStatistics(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(this.questionStatisticService.getQuestionStats(id));
     }
 }

@@ -48,14 +48,14 @@ public class QuestionStatisticService {
         List<AnswerStatDTO> answerStatDTOList = new ArrayList<>();
         for(Answer answer : answers){
             Integer answeredTotal = studentTestAnswers.stream()
-                            .filter(s -> s.getId() == answer.getId())
+                            .filter(s -> s.getAnswer().getId() == answer.getId())
                             .toList()
                             .size();
             AnswerStatDTO stat = new AnswerStatDTO();
             stat.setAnswerId(answer.getId());
-            stat.setPercent(answeredTotal/totalAnswer);
+            stat.setPercent((float) Math.ceil((float) answeredTotal)/totalAnswer * 100);
+            answerStatDTOList.add(stat);
         }
-
         return answerStatDTOList;
     }
 }

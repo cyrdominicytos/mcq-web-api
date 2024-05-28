@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class AnswerStatDTO {
     private Long answerId;
-    private float percent = 0.0f;
+    private float percent;
 }
