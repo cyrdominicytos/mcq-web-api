@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class AnswerQcmDTO {
     Long studentId;
-    Long qcmId;
     List<QuestionAnswerDTO> answers = new ArrayList<>();
+    List<QuestionCommentDTO> questionsComments = new ArrayList<>();
+    List<AnswerCommentDTO> answersComments = new ArrayList<>();
 }
