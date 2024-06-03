@@ -49,6 +49,7 @@ public class QuestionCommentService {
         QuestionComment c = new QuestionComment();
         c.setQuestion(question);
         c.setAccepted(questionCommentDTO.isAccepted());
+        c.setDescription(questionCommentDTO.getDescription());
         c.setSuggestion(questionCommentDTO.getSuggestion());
         c.setUpdatedDate(LocalDateTime.now());
         c.setCreationDate(LocalDateTime.now());
