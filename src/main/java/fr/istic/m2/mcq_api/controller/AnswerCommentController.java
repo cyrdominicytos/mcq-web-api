@@ -2,16 +2,11 @@ package fr.istic.m2.mcq_api.controller;
 
 import fr.istic.m2.mcq_api.domain.AnswerComment;
 import fr.istic.m2.mcq_api.dto.AnswerCommentDTO;
-import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.AnswerCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.http.HttpClient;
 import java.util.List;
 
 @RestController

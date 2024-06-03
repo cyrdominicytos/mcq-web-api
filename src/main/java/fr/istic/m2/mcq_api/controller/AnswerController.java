@@ -1,7 +1,6 @@
 package fr.istic.m2.mcq_api.controller;
 
 import fr.istic.m2.mcq_api.domain.Answer;
-import fr.istic.m2.mcq_api.domain.Score;
 import fr.istic.m2.mcq_api.dto.AnswerDTO;
 import fr.istic.m2.mcq_api.dto.AnswerQcmDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;

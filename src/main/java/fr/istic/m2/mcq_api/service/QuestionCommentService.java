@@ -1,8 +1,6 @@
 package fr.istic.m2.mcq_api.service;
 
 
-import fr.istic.m2.mcq_api.domain.Answer;
-import fr.istic.m2.mcq_api.domain.AnswerComment;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.domain.QuestionComment;
 import fr.istic.m2.mcq_api.dto.QuestionCommentDTO;
@@ -12,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -38,10 +37,17 @@ public class QuestionCommentService {
         }
     }
 
+    public List<QuestionComment> createAll(List<QuestionCommentDTO> questionsCommentsDTO){
+        List<QuestionComment> comments = new ArrayList<>();
+        questionsCommentsDTO.forEach(i -> comments.add(this.create(i)));
+        return comments;
+    }
+
     private QuestionComment formatComment(QuestionCommentDTO questionCommentDTO, Question question) {
         QuestionComment c = new QuestionComment();
         c.setQuestion(question);
         c.setAccepted(questionCommentDTO.isAccepted());
+        c.setDescription(questionCommentDTO.getDescription());
         c.setSuggestion(questionCommentDTO.getSuggestion());
         c.setUpdatedDate(LocalDateTime.now());
         c.setCreationDate(LocalDateTime.now());

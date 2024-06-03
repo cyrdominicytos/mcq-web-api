@@ -5,14 +5,10 @@ import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class AnswerService {
@@ -25,6 +21,8 @@ public class AnswerService {
     private final StudentTestRepository studentTestRepository;
     private final ScoreService scoreService;
     private final ScoreRepository scoreRepository;
+    private final QuestionCommentService questionCommentService;
+    private final AnswerCommentService answerCommentService;
 
 
     @Autowired
@@ -33,13 +31,17 @@ public class AnswerService {
             StudentRepository studentRepository,
             StudentTestRepository studentTestRepository,
             ScoreService scoreService,
-            ScoreRepository scoreRepository
+            ScoreRepository scoreRepository,
+            AnswerCommentService answerCommentService,
+            QuestionCommentService questionCommentService
             ){
         this.qcmRepository = qcmRepository;
         this.studentRepository = studentRepository;
         this.studentTestRepository = studentTestRepository;
         this.scoreService = scoreService;
         this.scoreRepository = scoreRepository;
+        this.answerCommentService = answerCommentService;
+        this.questionCommentService = questionCommentService;
     }
 
     public Answer read(Long id) {
@@ -138,6 +140,8 @@ public class AnswerService {
             studentTest.getStudentTestAnswer().add(studentTestAnswer); // Add each student answer
         }
         this.studentTestRepository.saveAndFlush(studentTest);
+        this.answerCommentService.createAll(answers.getAnswersComments());
+        this.questionCommentService.createAll(answers.getQuestionsComments());
         this.saveScore(qcm, student, answers);
     }
 
