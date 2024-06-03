@@ -24,6 +24,7 @@ public class Answer {
     private Question question;
 
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
     private List<StudentTestAnswer> studentTestAnswers = new ArrayList<>();
 
     private boolean isValid = false;
