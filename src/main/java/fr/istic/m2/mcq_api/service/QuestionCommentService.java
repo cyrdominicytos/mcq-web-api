@@ -1,8 +1,6 @@
 package fr.istic.m2.mcq_api.service;
 
 
-import fr.istic.m2.mcq_api.domain.Answer;
-import fr.istic.m2.mcq_api.domain.AnswerComment;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.domain.QuestionComment;
 import fr.istic.m2.mcq_api.dto.QuestionCommentDTO;
