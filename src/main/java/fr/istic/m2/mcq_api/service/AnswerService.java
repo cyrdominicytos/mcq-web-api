@@ -107,7 +107,7 @@ public class AnswerService {
         return this.answerRepository.findAll();
     }
 
-    public void answersQcm(Long id, AnswerQcmDTO answers) throws ResourceNotFoundException {
+    public Qcm answersQcm(Long id, AnswerQcmDTO answers) throws ResourceNotFoundException {
         Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Qcmid= "+id+" not not found"));
         Student student = this.studentRepository.findById(answers.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Student id not found"));
 
@@ -143,6 +143,7 @@ public class AnswerService {
         this.answerCommentService.createAll(answers.getAnswersComments());
         this.questionCommentService.createAll(answers.getQuestionsComments());
         this.saveScore(qcm, student, answers);
+        return qcm;
     }
 
     public void saveScore(Qcm qcm, Student student, AnswerQcmDTO answers){

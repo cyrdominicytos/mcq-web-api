@@ -1,6 +1,7 @@
 package fr.istic.m2.mcq_api.controller;
 
 import fr.istic.m2.mcq_api.domain.Answer;
+import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.dto.AnswerDTO;
 import fr.istic.m2.mcq_api.dto.AnswerQcmDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
@@ -60,8 +61,8 @@ public class AnswerController {
 
 
     @PostMapping("/qcm/{id}")
-    public @ResponseBody ResponseEntity<AnswerQcmDTO> answerQcm(@PathVariable Long id, @RequestBody AnswerQcmDTO answers){
-        this.answerService.answersQcm(id, answers);
-        return ResponseEntity.status(HttpStatus.OK).body(answers);
+    public @ResponseBody ResponseEntity<Qcm> answerQcm(@PathVariable Long id, @RequestBody AnswerQcmDTO answers){
+        return ResponseEntity.status(HttpStatus.OK)
+                            .body(this.answerService.answersQcm(id, answers));
     }
 }
