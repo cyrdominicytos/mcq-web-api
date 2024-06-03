@@ -7,10 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @Entity
@@ -25,8 +22,8 @@ public class Qcm {
     @JsonIgnore
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "qcm",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Question> questions  = new ArrayList<>();;
+    @OneToMany(mappedBy = "qcm", cascade = CascadeType.ALL)
+    private List<Question> questions  = new ArrayList<>();
 
     @OneToMany(mappedBy = "qcm", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -43,7 +40,6 @@ public class Qcm {
     private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
 
-
     @JsonGetter("teacherId")
     public Long getQcmTeacher(){
         return this.teacher.getId();
@@ -52,5 +48,22 @@ public class Qcm {
     @JsonGetter("level")
     public Map<String,  Object> qcmLevel() {
         return (new LevelDto()).toMap(this.level);
+    }
+
+    public Question removeQuestionById(Long questionId){
+        Question removedQuestion = null;
+        System.out.println("========== Questions size before size="+questions.size()+"==========");
+        for(Question q : questions)
+            if(Objects.equals(q.getId(), questionId))
+            {
+                 this.questions.remove(q);
+                 q.setQcm(null);
+                 removedQuestion = q;
+                System.out.println("========== Find question with title="+q.getTitle()+" id="+q.getId());
+                System.out.println("========== Find question with title="+q.getTitle()+" id="+q.getId());
+
+            }
+        System.out.println("========== Questions size after size="+questions.size()+"==========");
+    return removedQuestion;
     }
 }

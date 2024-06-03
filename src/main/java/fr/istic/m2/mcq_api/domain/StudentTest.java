@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Cyriaque TOSSOU, Tuo Adama
+ * @author Cyriaque TOSSOU
  * The class representing the completion of a MCQ test by a student
  */
 @Data
@@ -24,16 +24,16 @@ public class StudentTest {
     private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "student_id")
     @JsonIgnore
     private Student student;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "qcm_id")
     private Qcm qcm;
 
-    @OneToMany(mappedBy = "studentTest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "studentTest",  cascade = CascadeType.ALL)
     @JsonIgnore
     private List<StudentTestAnswer> studentTestAnswer = new ArrayList<>();
 

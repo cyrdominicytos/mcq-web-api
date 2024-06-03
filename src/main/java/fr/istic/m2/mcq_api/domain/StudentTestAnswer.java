@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * @author Cyriaque TOSSOU, Tuo Adama
+ * @author Cyriaque TOSSOU
  * The class that represents a student's response to a specific test
  */
 @Data
@@ -21,11 +21,11 @@ public class StudentTestAnswer {
     private LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "student_test_id")
     private StudentTest studentTest;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "answer_id")
     private Answer answer;
 

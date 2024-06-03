@@ -61,18 +61,20 @@ public class QcmController {
         List<Question> qcmList = this.qcmService.parseQCM(qcmDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(qcmList.size());
     }
-    @PostMapping("/createQCMFromYamlString")
-    public @ResponseBody ResponseEntity<Object> createQCMFromYamlString(@RequestParam("file") MultipartFile file,
-                                                                        @RequestParam Long levelId,
-                                                                        @RequestParam Long teacherId,
-                                                                        @RequestParam int limitQuestion,
-                                                                        @RequestParam int delay,
-                                                                        @RequestParam String title,
-                                                                        @RequestParam int complexity,
-                                                                        @RequestParam boolean isRandomActive,
-                                                                        @RequestParam boolean isActive,
-                                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
-                                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate){
+    @PostMapping("/createQCMFromYaml")
+    public @ResponseBody ResponseEntity<Object> createQCMFromYaml(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam Long levelId,
+        @RequestParam Long teacherId,
+        @RequestParam int limitQuestion,
+        @RequestParam int delay,
+        @RequestParam String title,
+        @RequestParam int complexity,
+        @RequestParam boolean isRandomActive,
+        @RequestParam boolean isActive,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
+    ){
         QcmDTO qcmRequest = new QcmDTO();
         qcmRequest.setLevelId(levelId);
         qcmRequest.setTeacherId(teacherId);
@@ -88,6 +90,41 @@ public class QcmController {
         try {
             String yamlContent = new String(file.getBytes());
            QcmListDTO qcmList = this.qcmService.createQCMFromYaml(yamlContent, qcmRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(qcmList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format invalid : "+e.getMessage());
+        }
+    }
+    @PostMapping("/updateQCMFromYaml")
+    public @ResponseBody ResponseEntity<Object> updateQCMFromYaml(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam Long qcmId,
+        @RequestParam Long levelId,
+        @RequestParam Long teacherId,
+        @RequestParam int limitQuestion,
+        @RequestParam int delay,
+        @RequestParam String title,
+        @RequestParam int complexity,
+        @RequestParam boolean isRandomActive,
+        @RequestParam boolean isActive,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
+    ){
+        QcmDTO qcmRequest = new QcmDTO();
+        qcmRequest.setLevelId(levelId);
+        qcmRequest.setTeacherId(teacherId);
+        qcmRequest.setLimitQuestion(limitQuestion);
+        qcmRequest.setDelay(delay);
+        qcmRequest.setTitle(title);
+        qcmRequest.setComplexity(complexity);
+        qcmRequest.setRandomActive(isRandomActive);
+        qcmRequest.setActive(isActive);
+        qcmRequest.setOpenStartDate(openStartDate);
+        qcmRequest.setCloseStartDate(closeStartDate);
+
+        try {
+            String yamlContent = new String(file.getBytes());
+           QcmListDTO qcmList = this.qcmService.updateQcmFromYaml(qcmId,yamlContent, qcmRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(qcmList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format invalid : "+e.getMessage());

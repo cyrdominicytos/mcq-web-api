@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Cyriaque TOSSOU, Tuo Adama
+ * @author Cyriaque TOSSOU
  * The class to represent the teacher entity
  */
 @Data
