@@ -29,6 +29,7 @@ public class Qcm {
     private List<Question> questions  = new ArrayList<>();;
 
     @OneToMany(mappedBy = "qcm", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<StudentTest> studentTestList = new ArrayList<>();
 
     private int limitQuestion;

@@ -1,21 +1,18 @@
 package fr.istic.m2.mcq_api.service;
 
-import fr.istic.m2.mcq_api.domain.Answer;
-import fr.istic.m2.mcq_api.domain.Qcm;
-import fr.istic.m2.mcq_api.domain.Question;
-import fr.istic.m2.mcq_api.dto.AnswerDTO;
-import fr.istic.m2.mcq_api.dto.AnswerListDTO;
-import fr.istic.m2.mcq_api.dto.QcmListDTO;
+import fr.istic.m2.mcq_api.domain.*;
+import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
-import fr.istic.m2.mcq_api.repository.AnswerRepository;
-import fr.istic.m2.mcq_api.repository.QuestionRepository;
+import fr.istic.m2.mcq_api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class AnswerService {
@@ -23,6 +20,27 @@ public class AnswerService {
     private AnswerRepository answerRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    private final QcmRepository qcmRepository;
+    private final StudentRepository studentRepository;
+    private final StudentTestRepository studentTestRepository;
+    private final ScoreService scoreService;
+    private final ScoreRepository scoreRepository;
+
+
+    @Autowired
+    public AnswerService(
+            QcmRepository qcmRepository,
+            StudentRepository studentRepository,
+            StudentTestRepository studentTestRepository,
+            ScoreService scoreService,
+            ScoreRepository scoreRepository
+            ){
+        this.qcmRepository = qcmRepository;
+        this.studentRepository = studentRepository;
+        this.studentTestRepository = studentTestRepository;
+        this.scoreService = scoreService;
+        this.scoreRepository = scoreRepository;
+    }
 
     public Answer read(Long id) {
         return this.answerRepository.findById(id).orElse(null);
@@ -41,9 +59,11 @@ public class AnswerService {
         Answer answer = this.answerRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Answer", "id", id));
         Question question = this.questionRepository.findById(answerDTO.getQuestionId()).orElseThrow(()-> new ResourceNotFoundException("Question", "id", answerDTO.getQuestionId()));
         answer.setValid(answerDTO.isValid());
+        answer.setActive(answerDTO.isActive());
         answer.setNbrPoint(answerDTO.getNbrPoint());
         answer.setQuestion(question);
         answer.setUpdatedDate(LocalDateTime.now());
+        this.answerRepository.saveAndFlush(answer);
         return answer;
     }
 
@@ -83,5 +103,68 @@ public class AnswerService {
 
     public List<Answer> getAll() {
         return this.answerRepository.findAll();
+    }
+
+    public void answersQcm(Long id, AnswerQcmDTO answers) throws ResourceNotFoundException {
+        Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Qcmid= "+id+" not not found"));
+        Student student = this.studentRepository.findById(answers.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Student id not found"));
+
+        List<QuestionAnswerDTO> questionAnswerDTOs = answers.getAnswers();
+
+        for(QuestionAnswerDTO q : questionAnswerDTOs){
+            boolean matched = this.isAnswerMatchWithQuestion(q);
+            if (!matched){
+                throw new ResourceNotFoundException(String.format("questionId=%d not matching with answerId=%d", q.getQuestionId(), q.getAnswerId()));
+            }
+        }
+
+        StudentTest studentTest = new StudentTest();
+        studentTest.setQcm(qcm);
+        studentTest.setStudent(student);
+        LocalDateTime now = LocalDateTime.now();
+        studentTest.setCreationDate(now);
+        studentTest.setUpdatedDate(now);
+        studentTest.setStartingDate(now); // Need review TODO
+        studentTest.setEndDate(now); // Need review TODO
+
+        for(QuestionAnswerDTO q : questionAnswerDTOs){
+            StudentTestAnswer studentTestAnswer = new StudentTestAnswer();
+            Answer answer = this.answerRepository.findById(q.getAnswerId()).get();
+            studentTestAnswer.setStudentTest(studentTest);
+            studentTestAnswer.setAnswer(answer);
+            studentTestAnswer.setCreationDate(now);
+            studentTestAnswer.setUpdatedDate(now);
+            studentTestAnswer.setDuration(q.getDuration());
+            studentTest.getStudentTestAnswer().add(studentTestAnswer); // Add each student answer
+        }
+        this.studentTestRepository.saveAndFlush(studentTest);
+        this.saveScore(qcm, student, answers);
+    }
+
+    public void saveScore(Qcm qcm, Student student, AnswerQcmDTO answers){
+        Integer totalValidAnswer = this.scoreService.getStudentTotalValidAnswer(answers);
+        Score score = new Score();
+        score.setQcm(qcm);
+        score.setStudent(student);
+        score.setTotalValidQuestion(totalValidAnswer);
+        score.setTotalQuestion(qcm.getQuestions().size());
+        this.scoreRepository.saveAndFlush(score);
+    }
+
+
+    /**
+     * check if answer id is link with question id
+     * @param questionAnswerDTO
+     * @return
+     */
+    private boolean isAnswerMatchWithQuestion(QuestionAnswerDTO questionAnswerDTO){
+        Answer answer = this.answerRepository.findById(questionAnswerDTO.getAnswerId()).orElse(null);
+        if (answer == null){
+            return false;
+        }
+        if (answer.getQuestion().getId() != questionAnswerDTO.getQuestionId()){
+            return false;
+        }
+        return true;
     }
 }

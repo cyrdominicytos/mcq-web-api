@@ -1,0 +1,29 @@
+meta {
+  name: answers-qcm
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{HOST}}/answer/qcm/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "studentId": 2,
+    "answers": [
+      {
+        "questionId": 1,
+        "answerId": 3,
+        "duration": 1000
+      },
+      {
+        "questionId": 5,
+        "answerId": 2,
+        "duration": 1000
+      }
+    ]
+  }
+}
