@@ -7,6 +7,7 @@ import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Question;
 import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
+import fr.istic.m2.mcq_api.parser.ParsingQuestion;
 import fr.istic.m2.mcq_api.service.QcmService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +58,42 @@ public class QcmController {
     }
 
     @PostMapping("/createQCMFromString")
-    public @ResponseBody ResponseEntity<Object> createQCMFromString(@RequestBody QcmWithTextDTO qcmDTO){
-        List<Question> qcmList = this.qcmService.parseQCM(qcmDTO);
+    public @ResponseBody ResponseEntity<Object> createQCMFromString(@RequestParam("file") MultipartFile file,
+          @RequestParam Long levelId,
+          @RequestParam Long teacherId,
+          @RequestParam int limitQuestion,
+          @RequestParam int delay,
+          @RequestParam String title,
+          @RequestParam int complexity,
+          @RequestParam boolean isRandomActive,
+          @RequestParam boolean isActive,
+          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
+          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
+    ){
+        QcmDTO qcmRequest = new QcmDTO();
+        qcmRequest.setLevelId(levelId);
+        qcmRequest.setTeacherId(teacherId);
+        qcmRequest.setLimitQuestion(limitQuestion);
+        qcmRequest.setDelay(delay);
+        qcmRequest.setTitle(title);
+        qcmRequest.setComplexity(complexity);
+        qcmRequest.setRandomActive(isRandomActive);
+        qcmRequest.setActive(isActive);
+        qcmRequest.setOpenStartDate(openStartDate);
+        qcmRequest.setCloseStartDate(closeStartDate);
+        QcmWithTextDTO dto = new QcmWithTextDTO();
+        dto.setDto(qcmRequest);
+        List<Question> qcmList = null;
+        try {
+            String content = new String(file.getBytes());
+            dto.setText(content);
+            qcmList = this.qcmService.defaultParseQCMText(dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format invalid : "+e.getMessage());
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(qcmList.size());
     }
+
     @PostMapping("/createQCMFromYaml")
     public @ResponseBody ResponseEntity<Object> createQCMFromYaml(
         @RequestParam("file") MultipartFile file,
@@ -175,5 +208,52 @@ public class QcmController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON: " + e.getMessage());
         }
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadQuestions(@RequestParam("file") MultipartFile file) {
+        try {
+            String content = new String(file.getBytes(), StandardCharsets.UTF_8);
+            List<ParsingQuestion> questions = qcmService.parseQuestionsFromText(content);
+            System.out.println("taille: " + questions.size());
+            questions.forEach(question -> {
+                System.out.println("Question: " + question.getTitle());
+                question.getMetaData().forEach(meta ->
+                        System.out.println("Meta - " + meta.getType() + ": " + meta.getValue()));
+                question.getOptions().forEach(option ->
+                        System.out.println("Option " + option.getType() + ": " + option.getText()));
+            });
+            return ResponseEntity.ok(questions);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File reading error");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid file format");
+        }
+    }
+
+    /*@PostMapping("/upload")
+    public ResponseEntity<?> uploadQuestions(@RequestParam("file") MultipartFile file) {
+        try {
+            String content = new String(file.getBytes(), StandardCharsets.UTF_8);
+            System.out.println("=========="+content+"==========");
+            List<Question> questions = qcmService.parseQuestionsFromText(content);
+            System.out.println("=========="+questions.size()+"==========");
+            return ResponseEntity.ok(questions);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File reading error");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid file format");
+        }
+    }*/
+/*
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getQuestion(@PathVariable Long id) {
+        Optional<Question> question = questionRepository.findById(id);
+        if (question.isPresent()) {
+            String content = questionAnswerService.convertQuestionsToText(Collections.singletonList(question.get()));
+            return ResponseEntity.ok(content);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question not found");
+        }
+    }*/
 
 }

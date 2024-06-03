@@ -6,11 +6,18 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fr.istic.m2.mcq_api.domain.*;
 import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
+import fr.istic.m2.mcq_api.parser.ParsingQuestion;
+import fr.istic.m2.mcq_api.parser.QuestionAnswerConcreteVisitor;
+import fr.istic.m2.mcq_api.parser.QuestionTreeVisitor;
+import fr.istic.m2.mcq_api.parser.antlr4.QuestionAnswerLexer;
+import fr.istic.m2.mcq_api.parser.antlr4.QuestionAnswerParser;
+import fr.istic.m2.mcq_api.parser.antlr4.QuestionAnswerVisitor;
 import fr.istic.m2.mcq_api.repository.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletResponse;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +44,7 @@ public class QcmService {
     @Autowired
     private TeacherRepository teacherRepository;
     @Autowired
-    private QuestionService questionService;
+    private ParserService parserService;
     @PersistenceContext
     private EntityManager em;
     public QcmListDTO read(Long id) throws ResourceNotFoundException {
@@ -778,4 +785,79 @@ public class QcmService {
         return this.qcmRepository.findAllByTeacherId(id);
 
     }
+
+    public List<Question> defaultParseQCMText(QcmWithTextDTO dto) throws Exception {
+        String content = dto.getText();
+        Teacher teacher = teacherRepository.findById(dto.getDto().getTeacherId()).orElseThrow(()-> new ResourceNotFoundException("Teacher", "id", dto.getDto().getTeacherId()));
+        Level level = levelRepository.findById(dto.getDto().getLevelId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", dto.getDto().getLevelId()));
+        Qcm qcm = formatQcm(dto.getDto(), null);
+        return parserService.parseQCM(content, qcm);
+    }
+
+
+    public List<ParsingQuestion>  parseQuestionsFromText(String text) throws IOException {
+        ANTLRInputStream input = new ANTLRInputStream(text);
+        QuestionAnswerLexer lexer = new QuestionAnswerLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        QuestionAnswerParser parser = new QuestionAnswerParser(tokens);
+        ParseTree tree = parser.question();
+        //QuestionAnswerParser.FileContext tree = parser.file();
+        //System.out.println("=============content # " + tree.toStringTree(parser) + "==============");
+        QuestionTreeVisitor visitor = new QuestionTreeVisitor();
+        return visitor.visit(tree);
+    }
+
+    public List<ParsingQuestion>  parseQuestionsFromText3(String text) throws IOException {
+        CharStream input = CharStreams.fromString(text);
+        QuestionAnswerLexer lexer = new QuestionAnswerLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        QuestionAnswerParser parser = new QuestionAnswerParser(tokens);
+        ParseTree tree = parser.file();
+        QuestionAnswerConcreteVisitor visitor = new QuestionAnswerConcreteVisitor();
+        System.out.println("=============lexer text # "+lexer.getText()+"==============");
+        System.out.println("=============lexer ligne #"+lexer.getLine()+"==============");
+        System.out.println("=============tokens text # "+tokens.getText()+"==============");
+        //System.out.println("=============parser question text # "+parser.question().getText()+"==============");
+        int linecount = 7;
+        while (linecount > 0){
+            System.out.println("=============Line "+lexer.getLine()+" => "+lexer.nextToken());
+            linecount--;
+        }
+        //System.out.println("=============parser question children size # "+parser.question().children.size()+"==============");
+        return visitor.visit(tree);
+    }
+    public List<Question>  parseQuestionsFromText2(String text) throws IOException {
+        CharStream input = CharStreams.fromString(text);
+        QuestionAnswerLexer lexer = new QuestionAnswerLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        QuestionAnswerParser parser = new QuestionAnswerParser(tokens);
+        ParseTree tree = parser.file();
+        QuestionAnswerVisitor<Object> visitor = new QuestionAnswerConcreteVisitor();
+        QuestionAnswerParser.FileContext fileContext = parser.file();
+        //System.out.println("=============fc text "+parser.pro+"==============");
+        System.out.println("=============fc text "+fileContext.getText()+"==============");
+        System.out.println("=============fc size "+fileContext.question().size()+"==============");
+        return (List<Question>) visitor.visitFile(fileContext);
+        //QuestionAnswerVisitor visitor = new QuestionAnswerVisitor();
+        //return visitor.visit(tree);
+       // return Arrays.asList();
+    }
+
+
+    /*public String convertQuestionsToText(List<Question> questions) {
+        StringBuilder sb = new StringBuilder();
+        for (Question question : questions) {
+            sb.append("* ").append(question.getText()).append("\n");
+            for (Option option : question.getOptions()) {
+                sb.append(option.isCorrect() ? "+" : "-").append(" ").append(option.getText()).append("\n");
+                for (String subOption : option.getSubOptions()) {
+                    sb.append("\t- ").append(subOption).append("\n");
+                }
+            }
+            for (Map.Entry<String, String> entry : question.getMeta().entrySet()) {
+                sb.append(":").append(entry.getKey()).append(" ").append(entry.getValue()).append("\n");
+            }
+        }
+        return sb.toString();
+    }*/
 }
