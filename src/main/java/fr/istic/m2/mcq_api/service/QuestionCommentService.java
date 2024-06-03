@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -36,6 +37,12 @@ public class QuestionCommentService {
         }catch (NoSuchElementException e){
             return null;
         }
+    }
+
+    public List<QuestionComment> createAll(List<QuestionCommentDTO> questionsCommentsDTO){
+        List<QuestionComment> comments = new ArrayList<>();
+        questionsCommentsDTO.forEach(i -> comments.add(this.create(i)));
+        return comments;
     }
 
     private QuestionComment formatComment(QuestionCommentDTO questionCommentDTO, Question question) {
