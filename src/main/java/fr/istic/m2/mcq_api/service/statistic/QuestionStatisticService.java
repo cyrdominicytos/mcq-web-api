@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionStatisticService {
@@ -58,27 +60,30 @@ public class QuestionStatisticService {
     }
 
     public List<UnAnswerQuestionDTO> unAnswerQuestionsStats(Qcm qcm){
-        List<Long> studentsIds =  qcm.getStudentTestList()
+        Set<Long> studentsIds =  qcm.getStudentTestList()
                 .stream()
-                .map(s -> s.getId())
-                .toList();
+                .map(s -> s.getStudent().getId())
+                .collect(Collectors.toSet());
+        Logger.getGlobal().info("TOTALL STUDENT= "+ studentsIds.getClass());
         List<UnAnswerQuestionDTO> answerQuestionDTOList = new ArrayList<>();
         qcm.getQuestions().forEach(q -> answerQuestionDTOList.add(this.unAnswerCount(q, studentsIds)));
         return answerQuestionDTOList;
     }
 
 
-    public UnAnswerQuestionDTO unAnswerCount(Question question, List<Long> studentsIds){
+    public UnAnswerQuestionDTO unAnswerCount(Question question, Set<Long> studentsIds){
         UnAnswerQuestionDTO answerQuestionDTO = new UnAnswerQuestionDTO();
         Set<Long> answerStudentIds =  new HashSet<>();
         List<Answer> answers = question.getAnswers();
         for (Answer answer : answers){
             answer.getStudentTestAnswers()
-                    .forEach(s -> answerStudentIds.add(s.getId()));
+                    .forEach(s -> answerStudentIds.add(s.getStudentTest().getStudent().getId()));
         }
         Integer count = 0;
         for (Long id : studentsIds){
-            if (!answers.contains(id)) count++;
+            if (!answerStudentIds.contains(id)){
+                count++;
+            }
         }
         answerQuestionDTO.setCount(count);
         answerQuestionDTO.setQuestionId(question.getId());
