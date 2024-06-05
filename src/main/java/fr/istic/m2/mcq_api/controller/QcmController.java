@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/qcm")
@@ -57,6 +58,21 @@ public class QcmController {
         return ResponseEntity.status(HttpStatus.CREATED).body(qcm);
     }
 
+    /**
+     * This fonction is using custom parser
+     * @param file
+     * @param levelId
+     * @param teacherId
+     * @param limitQuestion
+     * @param delay
+     * @param title
+     * @param complexity
+     * @param isRandomActive
+     * @param isActive
+     * @param openStartDate
+     * @param closeStartDate
+     * @return
+     */
     @PostMapping("/createQCMFromString")
     public @ResponseBody ResponseEntity<Object> createQCMFromString(@RequestParam("file") MultipartFile file,
           @RequestParam Long levelId,
@@ -89,11 +105,58 @@ public class QcmController {
             dto.setText(content);
             qcmList = this.qcmService.defaultParseQCMText(dto);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format invalid : "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(qcmList.size());
     }
+@PutMapping("/updateQCMFromString/{qcmId}")
+    public @ResponseBody ResponseEntity<Object> updateQCMFromString(
+          @PathVariable Long qcmId,
+          @RequestParam("file") MultipartFile file,
+          @RequestParam Long levelId,
+          @RequestParam Long teacherId,
+          @RequestParam int limitQuestion,
+          @RequestParam int delay,
+          @RequestParam String title,
+          @RequestParam int complexity,
+          @RequestParam boolean isRandomActive,
+          @RequestParam boolean isActive,
+          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
+          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
+    ){
+        QcmDTO qcmRequest = new QcmDTO();
+        qcmRequest.setLevelId(levelId);
+        qcmRequest.setTeacherId(teacherId);
+        qcmRequest.setLimitQuestion(limitQuestion);
+        qcmRequest.setDelay(delay);
+        qcmRequest.setTitle(title);
+        qcmRequest.setComplexity(complexity);
+        qcmRequest.setRandomActive(isRandomActive);
+        qcmRequest.setActive(isActive);
+        qcmRequest.setOpenStartDate(openStartDate);
+        qcmRequest.setCloseStartDate(closeStartDate);
+        QcmWithTextDTO dto = new QcmWithTextDTO();
+        dto.setDto(qcmRequest);
+        QcmListDTO qcmList = null;
+        try {
+            String content = new String(file.getBytes());
+            dto.setText(content);
+            qcmList = this.qcmService.defaultParseQCMTextToUpdateQCM(qcmId, dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("QCM mise à jour avec succès !");
+    }
 
+    @PutMapping("/getStringFormatOfQCM/{qcmId}/{teacherId}")
+    public  @ResponseBody ResponseEntity<Object> getStringFormatOfQCM(@PathVariable Long qcmId, @PathVariable Long teacherId){
+        try {
+            QcmToTextDTO data = qcmService.retriveQcmForEdition(qcmId, teacherId);
+            return ResponseEntity.status(HttpStatus.OK).body(data);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
     @PostMapping("/createQCMFromYaml")
     public @ResponseBody ResponseEntity<Object> createQCMFromYaml(
         @RequestParam("file") MultipartFile file,

@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    List<Question>  findQuestionByQcmId(Long id);
+    List<Question>  findByQcmId(Long id);
 
-    /*@Query("SELECT q FROM Question q WHERE q.qcm.id = :qcmId")
-    List<Question> findAllByQcmId(@Param("qcmId") Long qcmId);*/
+    @Query("SELECT q FROM Question q WHERE q.qcm.id = :qcmId")
+    List<Question> findQuestionByQcmId(@Param("qcmId") Long qcmId);
 }

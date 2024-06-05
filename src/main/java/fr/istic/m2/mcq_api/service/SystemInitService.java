@@ -120,6 +120,7 @@ public class SystemInitService {
                 studentTestAnswer.setAnswer(answers.get(0));
                 studentTestAnswer.setStudentTest(studentTest);
                 studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
+                System.out.println("Système initialisé avec succès !");
             }
         } else throw new Exception("Saved without StudentTest because of question");
     }

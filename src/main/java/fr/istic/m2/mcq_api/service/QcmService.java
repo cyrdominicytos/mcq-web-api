@@ -786,12 +786,113 @@ public class QcmService {
 
     }
 
+    /**
+     * Function to validate user QCM text and create the QCM if everything is well valued
+     * @param dto
+     * @return
+     * @throws Exception
+     */
     public List<Question> defaultParseQCMText(QcmWithTextDTO dto) throws Exception {
         String content = dto.getText();
-        Teacher teacher = teacherRepository.findById(dto.getDto().getTeacherId()).orElseThrow(()-> new ResourceNotFoundException("Teacher", "id", dto.getDto().getTeacherId()));
-        Level level = levelRepository.findById(dto.getDto().getLevelId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", dto.getDto().getLevelId()));
         Qcm qcm = formatQcm(dto.getDto(), null);
-        return parserService.parseQCM(content, qcm);
+        List<Question> questions = parserService.parseQCM(content, qcm);
+        if(!questions.isEmpty()){
+            qcmRepository.save(qcm);
+            questionRepository.saveAll(questions);
+            for(Question q: questions)
+                answerRepository.saveAllAndFlush(q.getAnswers());
+        }
+        return  questions;
+    }
+
+    /**
+     * Function to validate user QCM text and UPDATE the QCM if everything is well valued
+     * @param dto
+     * @return
+     * @throws Exception
+     */
+    public QcmListDTO  defaultParseQCMTextToUpdateQCM(Long id, QcmWithTextDTO dto) throws Exception {
+        String content = dto.getText();
+        Qcm qcm = this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
+        qcm = this.formatQcm(dto.getDto(), qcm);
+
+        List<Question> questions = parserService.parseQCM(content, qcm);
+        List<Question> oldQuestionList = qcm.getQuestions();
+        List<Answer> answersToSave = new ArrayList<>();
+        List<Question> questionsToSave = new ArrayList<>();
+         //System.out.println("=======QCMID = "+qcm.getId()+" q1="+oldQuestionList.size()+" q2="+oldQuestionList2.size()+" q3="+qcm.getQuestions().size());
+
+        //Tout est Okay, même nombre d'élement
+        int qIndex = 0;
+        System.out.println("Question count "+questions.size());
+        if(questions.size() < oldQuestionList.size())
+            throw new ResourceNotFoundException("UnAuthorized action : You can't remove some question during QCM updating");
+
+        for(Question q: questions)
+        {
+            Question oldQuestion = null;
+            if(qIndex<oldQuestionList.size()){
+                //update old questions
+                System.out.println("++++++OLD QUESTION+++++++++++"+qIndex);
+                oldQuestion = this.replaceQuestion(oldQuestionList.get(qIndex), q);
+            }
+            else{
+                //create new Question
+                oldQuestion = new Question();
+                oldQuestion.setQcm(qcm);
+                Question temp = this.replaceQuestion(oldQuestion, q);
+                questionsToSave.add(temp);
+                System.out.println("++++++CREATE NEW QUESTION+++++++++++"+qIndex);
+            }
+            List<Answer> oldAnswerList = oldQuestion.getAnswers();
+            if(q.getAnswers().size() < oldAnswerList.size())
+                throw new ResourceNotFoundException("UnAuthorized action : You can't remove some answer during QCM updating");
+
+            //update question answers
+            int aIndex = 0;
+            for(Answer a: q.getAnswers())
+            {
+                if(aIndex<oldAnswerList.size())
+                {
+                    //update old answer
+                    System.out.println("old answer "+qIndex +" "+aIndex);
+                    this.replaceAnswer(oldAnswerList.get(aIndex), a);
+                }else
+                {
+                    //create new answer
+                    Answer oldAnswer = new Answer();
+                    oldAnswer.setQuestion(oldQuestion);
+                    Answer temp = this.replaceAnswer(oldAnswer, a);
+                    answersToSave.add(temp);
+                    System.out.println("==========new answer "+qIndex +" "+aIndex);
+                }
+                aIndex++;
+            }
+            qIndex++;
+            System.out.println("Question current index "+qIndex);
+        }
+       // qcmRepository.saveAndFlush(qcm);
+        if(!questions.isEmpty()){
+            qcmRepository.save(qcm);
+            questionRepository.saveAll(questionsToSave);
+            for(Question q: questionsToSave)
+                answerRepository.saveAllAndFlush(q.getAnswers());
+        }
+        return convertToListDto(qcm) ;
+    }
+
+    /**
+     * This function research and extract QCM questions and convert them into a formatted text for user edition purpose
+     * @param qcmId
+     * @return
+     */
+    public QcmToTextDTO retriveQcmForEdition(Long qcmId, Long teacherId){
+        Qcm qcm = this.qcmRepository.findById(qcmId).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", qcmId));
+        if(qcm==null || qcm.getTeacher()==null || qcm.getTeacher().getId()!= teacherId)
+            throw new UnsupportedOperationException("Le qcm recherché n'existe pas ou vous n'avez pas le droit de le modifier");
+
+        String content = parserService.convertQuestionsToText(qcm.getQuestions());
+        return QcmToTextDTO.formatQCMToQcmToTextDTO(qcm, content);
     }
 
 
@@ -860,4 +961,33 @@ public class QcmService {
         }
         return sb.toString();
     }*/
+
+    /**
+     * Replace one question by another
+     * @param oldQuestion
+     * @param newQuestion
+     * @return
+     */
+    private Question replaceQuestion(Question oldQuestion, Question newQuestion){
+        oldQuestion.setActive(newQuestion.isActive());
+        oldQuestion.setComplexity(newQuestion.getComplexity());
+        oldQuestion.setTitle(newQuestion.getTitle());
+        oldQuestion.setDelay(newQuestion.getDelay());
+        oldQuestion.setUpdatedDate(LocalDateTime.now());
+        return oldQuestion;
+    }
+
+    /**
+     * Replace one answer by another
+     * @param oldAnswer
+     * @param newAnswer
+     * @return
+     */
+    private Answer replaceAnswer(Answer oldAnswer, Answer newAnswer){
+        oldAnswer.setTitle(newAnswer.getTitle());
+        oldAnswer.setActive(newAnswer.isActive());
+        oldAnswer.setValid(newAnswer.isValid());
+        oldAnswer.setUpdatedDate(LocalDateTime.now());
+        return oldAnswer;
+    }
 }
