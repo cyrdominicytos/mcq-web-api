@@ -20,7 +20,7 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Object> getAll(){
         List<StudentListDto> objectList = this.studentService.getStudents();
         return ResponseEntity.status(HttpStatus.OK).body(objectList);

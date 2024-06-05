@@ -1,9 +1,11 @@
 package fr.istic.m2.mcq_api.repository;
 
+import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.domain.StudentTestAnswer;
-import fr.istic.m2.mcq_api.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author Cyriaque TOSSOU, Tuo Adama
@@ -11,5 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface StudentTestAnswerRepository extends JpaRepository<StudentTestAnswer, Long> {
-    // You can define additional methods here if needed
+    List<StudentTestAnswer> findByAnswerIn(List<Answer> answers);
 }

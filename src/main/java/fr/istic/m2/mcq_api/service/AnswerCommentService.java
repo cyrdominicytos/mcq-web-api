@@ -6,11 +6,11 @@ import fr.istic.m2.mcq_api.dto.AnswerCommentDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.AnswerCommentRepository;
 import fr.istic.m2.mcq_api.repository.AnswerRepository;
-import fr.istic.m2.mcq_api.repository.QuestionCommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -47,6 +47,12 @@ public class AnswerCommentService {
             return null;
         }
     }
+
+    public List<AnswerComment> createAll(List<AnswerCommentDTO> answersCommentDTOS){
+      List<AnswerComment> comments = new ArrayList<>();
+      answersCommentDTOS.forEach(i -> comments.add(this.create(i)));
+      return comments;
+    };
 
     public AnswerComment read(Long id) {
         Optional<AnswerComment> commentOptional = this.answerCommentRepository.findById(id);

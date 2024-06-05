@@ -9,6 +9,8 @@ import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.parser.ParsingQuestion;
 import fr.istic.m2.mcq_api.service.QcmService;
+import fr.istic.m2.mcq_api.service.ScoreService;
+import fr.istic.m2.mcq_api.service.statistic.QuestionStatisticService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,7 +32,15 @@ import java.util.Set;
 public class QcmController {
     @Autowired
     private QcmService qcmService;
+    @Autowired
+    private ScoreService scoreService;
 
+    private final QuestionStatisticService statsService;
+
+    @Autowired
+    public QcmController(QuestionStatisticService statsService){
+        this.statsService = statsService;
+    }
 
     @GetMapping
     public @ResponseBody ResponseEntity<List<Qcm>> getAll(){
@@ -293,30 +303,9 @@ public class QcmController {
         }
     }
 
-    /*@PostMapping("/upload")
-    public ResponseEntity<?> uploadQuestions(@RequestParam("file") MultipartFile file) {
-        try {
-            String content = new String(file.getBytes(), StandardCharsets.UTF_8);
-            System.out.println("=========="+content+"==========");
-            List<Question> questions = qcmService.parseQuestionsFromText(content);
-            System.out.println("=========="+questions.size()+"==========");
-            return ResponseEntity.ok(questions);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File reading error");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Invalid file format");
-        }
-    }*/
-/*
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getQuestion(@PathVariable Long id) {
-        Optional<Question> question = questionRepository.findById(id);
-        if (question.isPresent()) {
-            String content = questionAnswerService.convertQuestionsToText(Collections.singletonList(question.get()));
-            return ResponseEntity.ok(content);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question not found");
-        }
-    }*/
+    @GetMapping("/statistics/{id}")
+    public ResponseEntity<QcmStatDTO> getStatistic(@PathVariable Long id){
+        return  ResponseEntity.status(HttpStatus.OK).body(this.scoreService.getQcmStats(id));
+    }
 
 }

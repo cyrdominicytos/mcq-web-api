@@ -22,11 +22,10 @@ public class Answer {
     @ManyToOne
     @JsonIgnore
     private Question question;
-
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
+
     @JsonIgnore
     private List<StudentTestAnswer> studentTestAnswers = new ArrayList<>();
-
     private boolean isValid = false;
     private boolean isActive = true;
     private int nbrPoint;
