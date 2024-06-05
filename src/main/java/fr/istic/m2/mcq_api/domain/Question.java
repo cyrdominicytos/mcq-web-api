@@ -19,7 +19,7 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionComment> comments = new ArrayList<>();
 
     @ManyToOne
@@ -34,7 +34,7 @@ public class Question {
 
 
     @JsonGetter("qcmId")
-    public Long getQcmId(){
+    public Long getQuestionQcmId(){
         return this.qcm.getId();
     }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * @author Cyriaque TOSSOU, Tuo Adama
+ * @author Cyriaque TOSSOU
  * The class to represent the Student entity
  */
 @Data
@@ -15,7 +15,7 @@ public class Student extends User {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     List<StudentTest> studentTestList = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "level_id")
     Level studentLevel;
 }

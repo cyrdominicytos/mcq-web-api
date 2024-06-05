@@ -1,0 +1,65 @@
+questions:
+  - title: "Quelle ville est la capitale de la France ?"
+    active: true
+    delay: 30
+    complexity: 1
+    questionId: 1
+    answers:
+      - title: "Londres"
+        active: true
+        valid: false
+        answerId: 2
+      - title: "Paris"
+        active: false
+        valid: true
+        answerId: 1
+      - title: "Berlins"
+        active: true
+        valid: false
+        answerId: 3
+      - title: "Rennes"
+        active: true
+        valid: false
+      - title: "Lyon"
+        active: true
+        valid: false
+        answerId: 0
+  - title: "Que a inventé le langage Java ?"
+    active: true
+    delay: 15
+    complexity: 1
+    answers:
+      - title: "Harvey Specter"
+        active: true
+        valid: false
+      - title: "Jamse Gosling"
+        active: true
+        valid: false
+      - title: "James Gosling"
+        active: true
+        valid: true
+      - title: "Aucune des propositions"
+        active: true
+        valid: false
+  - title: "Quelle est la formule chimique de l'eau ?"
+    active: true
+    delay: 15
+    complexity: 1
+    questionId: 3
+    answers:
+      - title: "H2O"
+        active: true
+        valid: true
+        answerId: 9
+      - title: "CO2"
+        active: true
+        valid: false
+        answerId: 10
+      - title: "O2"
+        active: true
+        valid: false
+        answerId: 11
+      - title: "H2SO4"
+        active: true
+        valid: false
+        answerId: 12

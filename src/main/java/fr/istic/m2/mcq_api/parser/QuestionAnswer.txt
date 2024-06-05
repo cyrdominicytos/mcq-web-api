@@ -1,0 +1,50 @@
+grammar QuestionAnswer;
+
+file: (question | option | meta)*;
+
+question: '*' ' ' TEXT (NL TEXT)*;
+
+option: ('+' | '-') ' ' TEXT (NL TAB '-' ' ' TEXT)*;
+
+meta: ':' TEXT;
+
+TEXT: ~[\r\n]+;
+NL: '\r'? '\n';
+TAB: '\t';
+WS: [ \t\r\n]+ -> skip;
+
+
+//V2
+
+grammar QuestionAnswer;
+
+file: (question (meta)* (option)+)* ;
+
+question: '*' ' ' TEXT (NL TEXT)* ;
+
+meta: (':delay' | ':begindate' | ':complexity') ' ' TEXT ;
+
+option: ('+' | '-') ' ' TEXT (NL TEXT)* ;
+
+TEXT: ~[\r\n]+ ;
+NL: '\r'? '\n' ;
+WS: [ \t\r\n]+ -> skip ;
+
+
+//V3
+
+
+
+grammar QuestionAnswer;
+
+file: (question meta* option+)* EOF;
+
+question: '*' ' ' TEXT (NL TEXT)*;
+
+meta: (':delay' | ':begindate' | ':complexity') ' ' TEXT ;
+
+option: ('+' | '-') ' ' TEXT (NL TEXT)*;
+
+TEXT: ~[\r\n]+;
+NL: '\r'? '\n';
+WS: [ \t\r\n]+ -> skip;

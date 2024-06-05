@@ -70,4 +70,11 @@ public class QuestionService {
     public List<Question> getAll() {
         return this.questionRepository.findAll();
     }
+    public void deleteAllById(List<Long> ids) {
+       // this.questionRepository.deleteAllById(ids);
+        if(ids.size() > 0){
+            System.out.println("++++++++++++Called with ++++++++++ "+ids.get(0));
+            this.delete(ids.get(0));
+        }
+    }
 }

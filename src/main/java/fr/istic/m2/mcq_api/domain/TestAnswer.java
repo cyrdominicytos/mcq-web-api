@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 public class TestAnswer {
-    //TODO : should be remove. And need to revert related dev. TestAnswer = StudentTestAnswer
+    //TODO : should be removed And need to revert related dev. TestAnswer = StudentTestAnswer
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

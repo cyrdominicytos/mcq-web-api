@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * @author Cyriaque TOSSOU, Tuo Adama
+ * @author Cyriaque TOSSOU
  * The class to represent the User entity (A User can be a Student or a Teacher)
  */
 @Data

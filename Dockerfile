@@ -5,6 +5,7 @@ FROM maven:3.8.3-openjdk-17 AS build
 COPY src /home/qcmapp/src
 COPY pom.xml /home/qcmapp
 RUN mvn -f /home/qcmapp/pom.xml clean package -DskipTests
+# COPY  /home/qcmapp/target/generated-sources/* /home/qcmapp/src/main/java/fr/istic/m2/mcq_api/parser
 
 # Run stage
 FROM openjdk:17-jdk-alpine

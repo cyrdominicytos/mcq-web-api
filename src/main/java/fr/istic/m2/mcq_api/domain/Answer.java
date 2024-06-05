@@ -16,17 +16,16 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "answer", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<AnswerComment> comments  = new ArrayList<>();;
+    @OneToMany(mappedBy = "answer",  cascade = CascadeType.ALL)
+    private List<AnswerComment> comments  = new ArrayList<>();
 
     @ManyToOne
     @JsonIgnore
     private Question question;
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
 
-    @OneToMany(mappedBy = "answer", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     private List<StudentTestAnswer> studentTestAnswers = new ArrayList<>();
-
     private boolean isValid = false;
     private boolean isActive = true;
     private int nbrPoint;

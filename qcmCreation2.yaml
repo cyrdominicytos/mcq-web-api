@@ -1,0 +1,34 @@
+* Une question
+la question continue toujours
+elle peut s'etendre sur plusieurs ligne
+
+#je sait qu'elle est terminée si je rencontre (: ou - ou + en debut de ligne ce qui signifie que ces caractères sont interdit en debut de ligne)
+
+:delay 12 #ce signifie que le delai vaut 12 seconde mais est optionnel, en fait tout ce qui commence par : est optionnel)
+:begindate une_date_ici
+:complexity 1
+
+# Ensuit j'ai des propositions de réponse ( qui commencent tjrs par + ou - suivi d'un espace et qui peut s'edendre sur plusieurs ligne mais si sur la ligne suivante je rencontre + ou - suvi d'un espace c'une une nouvelle proposition)
+
+- 5
+- -2
++ -300
+- Aucune des propositions n'est vrai
+
+* Question 2
+
+- item 1
+- item 2
+  - sous item 2.1
+  - sous item 2.2
+- item 3
++ Aucune des réponses n'est vraie
+
+# pour ce dernier cas une question ou une proposition peut avoir des sous éléments on considère que c'est toujours la même question/proposition. Mais les sous élements doit toujour commencer (en debut de ligne par une tabulation suivi de tiret suivi d'espace avant d'écrire le texte) et on aimerait l'enregistrer avec cette demarcation
+
+
+Le travail a faire :
+  -Je dois écrire un parseur en java qui prend un fichier txt, lis son contenu et et parviens a m'afficher chaque contenu (question, options, propositons, reponse vrai +, reponse fausse -) en fait j'ai un modèl java qui me permet de l'enregistrer en BD
+  -Et toujours avec le parseur je dois pouvoir faire l'inverse, prendre l'ojet java existant et le parser en se format de text que je doit retourner 
+  
+  Quelles sont les librairies ou outils java capable de me permettre de faire ça (définir mon langage et faire mon parsing)

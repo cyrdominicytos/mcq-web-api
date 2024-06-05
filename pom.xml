@@ -15,6 +15,9 @@
 	<description>mcq_api</description>
 	<properties>
 		<java.version>17</java.version>
+		<antlr4.plugin.version>4.13.0</antlr4.plugin.version>
+		<antlr4.version>4.13.0</antlr4.version>
+		<build.helper.maven.plugin.version>3.6.0</build.helper.maven.plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -93,7 +96,23 @@
 			<artifactId>snakeyaml</artifactId>
 			<version>2.2</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.antlr/antlr4 -->
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>${antlr4.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-maven-plugin</artifactId>
+			<version>${antlr4.plugin.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/build-helper-maven-plugin -->
+		<dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>build-helper-maven-plugin</artifactId>
+			<version>${build.helper.maven.plugin.version}</version>
+		</dependency>
 	</dependencies>
 
                 <build>
@@ -110,7 +129,47 @@
                                 </excludes>
                             </configuration>
                         </plugin>
-                    </plugins>
+						<plugin>
+							<groupId>org.antlr</groupId>
+							<artifactId>antlr4-maven-plugin</artifactId>
+							<version>${antlr4.plugin.version}</version>
+							<configuration>
+								<arguments>
+									<argument>-visitor</argument>
+									<argument>-Dlanguage=Java</argument>
+								</arguments>
+							</configuration>
+							<executions>
+								<execution>
+									<goals>
+										<goal>antlr4</goal>
+									</goals>
+<!--									<configuration>-->
+<!--										<sourceDirectory>${project.basedir}/src/main/antlr4</sourceDirectory>-->
+<!--										<outputDirectory>${project.basedir}/target/generated-sources/antlr4</outputDirectory>-->
+<!--									</configuration>-->
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>build-helper-maven-plugin</artifactId>
+							<version>${build.helper.maven.plugin.version}</version>
+							<executions>
+								<execution>
+									<id>add-source</id>
+									<phase>generate-sources</phase>
+									<goals>
+										<goal>add-source</goal>
+									</goals>
+									<configuration>
+										<sources>
+											<source>${project.build.directory}/generated-sources/antlr4</source>
+										</sources>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
                 </build>
-
             </project>
