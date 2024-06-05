@@ -1,17 +1,15 @@
 package fr.istic.m2.mcq_api.service.statistic;
 
-import fr.istic.m2.mcq_api.domain.Answer;
-import fr.istic.m2.mcq_api.domain.Question;
-import fr.istic.m2.mcq_api.domain.StudentTestAnswer;
+import fr.istic.m2.mcq_api.domain.*;
 import fr.istic.m2.mcq_api.dto.AnswerStatDTO;
+import fr.istic.m2.mcq_api.dto.UnAnswerQuestionDTO;
 import fr.istic.m2.mcq_api.repository.QcmRepository;
 import fr.istic.m2.mcq_api.repository.StudentTestAnswerRepository;
 import fr.istic.m2.mcq_api.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class QuestionStatisticService {
@@ -57,5 +55,33 @@ public class QuestionStatisticService {
             answerStatDTOList.add(stat);
         }
         return answerStatDTOList;
+    }
+
+    public List<UnAnswerQuestionDTO> unAnswerQuestionsStats(Qcm qcm){
+        List<Long> studentsIds =  qcm.getStudentTestList()
+                .stream()
+                .map(s -> s.getId())
+                .toList();
+        List<UnAnswerQuestionDTO> answerQuestionDTOList = new ArrayList<>();
+        qcm.getQuestions().forEach(q -> answerQuestionDTOList.add(this.unAnswerCount(q, studentsIds)));
+        return answerQuestionDTOList;
+    }
+
+
+    public UnAnswerQuestionDTO unAnswerCount(Question question, List<Long> studentsIds){
+        UnAnswerQuestionDTO answerQuestionDTO = new UnAnswerQuestionDTO();
+        Set<Long> answerStudentIds =  new HashSet<>();
+        List<Answer> answers = question.getAnswers();
+        for (Answer answer : answers){
+            answer.getStudentTestAnswers()
+                    .forEach(s -> answerStudentIds.add(s.getId()));
+        }
+        Integer count = 0;
+        for (Long id : studentsIds){
+            if (!answers.contains(id)) count++;
+        }
+        answerQuestionDTO.setCount(count);
+        answerQuestionDTO.setQuestionId(question.getId());
+        return answerQuestionDTO;
     }
 }
