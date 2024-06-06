@@ -47,22 +47,22 @@ public class QcmService {
     private ParserService parserService;
     @PersistenceContext
     private EntityManager em;
-    public QcmListDTO read(Long id) throws ResourceNotFoundException {
+    public Qcm read(Long id) throws ResourceNotFoundException {
         Qcm qcm =   this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
-        return  convertToListDto(qcm);
+        return  qcm;
     }
 
-    public QcmListDTO create(QcmDTO qcmDTO) {
+    public Qcm create(QcmDTO qcmDTO) {
         Qcm qcm = this.formatQcm(qcmDTO, null);
         this.qcmRepository.saveAndFlush(qcm);
-        return convertToListDto(qcm);
+        return qcm;
     }
 
-    public QcmListDTO update(Long id, QcmDTO qcmDTO) throws ResourceNotFoundException {
+    public Qcm update(Long id, QcmDTO qcmDTO) throws ResourceNotFoundException {
         Qcm qcm = this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
         qcm = this.formatQcm(qcmDTO, qcm);
         this.qcmRepository.saveAndFlush(qcm);
-        return convertToListDto(qcm) ;
+        return qcm ;
     }
 
     public void delete(Long id) {
@@ -239,7 +239,7 @@ public class QcmService {
         return listDTO;
     }
 
-    public QcmListDTO createQCMFromJSON(String json, QcmCreateJSONDto dto) throws IOException {
+    public Qcm createQCMFromJSON(String json, QcmCreateJSONDto dto) throws IOException {
         QcmJSONDTO qcmJsonDto = parseQCMFromJSON(json);
         if(qcmJsonDto==null)
             throw new ResourceNotFoundException("Invalid format: missing qcm: ");
@@ -279,7 +279,8 @@ public class QcmService {
             questionRepository.saveAllAndFlush(questionList);
             answerRepository.saveAllAndFlush(answerList);
         }
-        return convertToListDto(qcm);
+        return qcm;
+        //return convertToListDto(qcm);
     }
 
     /**
@@ -583,103 +584,7 @@ public class QcmService {
 //     for(Long id: existingQuestionsById.keySet())
 //            qcm.removeQuestionById(id);
 
-    @Transactional
-    public QcmListDTO updateQcmFromYamlR(Long qcmId, String yamlContent, QcmDTO dto) throws Exception {
-        Qcm qcm = qcmRepository.findById(qcmId)
-                .orElseThrow(() -> new ResourceNotFoundException("QCM not found with id " + qcmId));
-        qcm = formatQcm(dto, qcm);
 
-        YamlParsersService<QcmEditYamlDTO> parser = new YamlParsersService<>();
-        List<QuestionEditYamlDTO> questionYamlDTOs = parser.parseYaml(yamlContent, QcmEditYamlDTO.class).getQuestions();
-
-        // Map for existing questions by ID
-        System.out.println("==============qcm.getQuestions() count " + qcm.getQuestions().size());
-        Map<Long, Question> existingQuestionsById = qcm.getQuestions().stream()
-                .collect(Collectors.toMap(Question::getId, question -> question));
-
-        List<Question> questionsToSaveOrUpdate = new ArrayList<>();
-        List<Long> answerIdsToDelete = new ArrayList<>();
-        List<Long> questionIdsToDelete = new ArrayList<>();
-        List<Answer> answersToSaveOrUpdate = new ArrayList<>();
-
-        for (QuestionEditYamlDTO questionYamlDTO : questionYamlDTOs) {
-            // Repérer les anciennes questions
-            Question question;
-            if (questionYamlDTO.getQuestionId() != null && questionYamlDTO.getQuestionId() > 0) {
-                question = existingQuestionsById.remove(questionYamlDTO.getQuestionId());
-                if (question == null || !question.getQcm().getId().equals(qcmId)) {
-                    throw new IllegalArgumentException("Invalid question ID: " + questionYamlDTO.getQuestionId());
-                }
-            } else {
-                question = new Question();
-                question.setQcm(qcm);
-            }
-
-            question.setTitle(questionYamlDTO.getTitle());
-            question.setActive(questionYamlDTO.isActive());
-            question.setDelay(questionYamlDTO.getDelay());
-            question.setComplexity(questionYamlDTO.getComplexity());
-            questionsToSaveOrUpdate.add(question);
-
-            // Map for existing answers by ID
-            System.out.println("==============question.getAnswers() count " + question.getAnswers().size());
-            Map<Long, Answer> existingAnswersById = question.getAnswers().stream()
-                    .collect(Collectors.toMap(Answer::getId, answer -> answer));
-
-            List<Answer> updatedAnswers = new ArrayList<>();
-            for (AnswerEditYamlDTO answerYamlDTO : questionYamlDTO.getAnswers()) {
-                Answer answer;
-                if (answerYamlDTO.getAnswerId() != null && answerYamlDTO.getAnswerId() > 0) {
-                    answer = existingAnswersById.remove(answerYamlDTO.getAnswerId());
-                    if (answer == null || !answer.getQuestion().getId().equals(question.getId())) {
-                        throw new IllegalArgumentException("Invalid answer ID: " + answerYamlDTO.getAnswerId());
-                    }
-                } else {
-                    answer = new Answer();
-                    answer.setQuestion(question);
-                }
-
-                answer.setTitle(answerYamlDTO.getTitle());
-                answer.setActive(answerYamlDTO.isActive());
-                answer.setValid(answerYamlDTO.isValid());
-                updatedAnswers.add(answer);
-                answersToSaveOrUpdate.add(answer);
-            }
-            answerIdsToDelete.addAll(existingAnswersById.keySet());
-            question.setAnswers(updatedAnswers);
-        }
-
-        // Save new and update old Questions and Answers
-        System.out.println("==============1");
-        questionRepository.saveAllAndFlush(questionsToSaveOrUpdate);
-        System.out.println("==============2");
-        answerRepository.saveAllAndFlush(answersToSaveOrUpdate);
-        System.out.println("==============3");
-        // Collect questions to delete
-        for (Question q : qcm.getQuestions()) {
-            if (existingQuestionsById.containsKey(q.getId())) {
-                System.out.println("======== Contain=true ========");
-                questionIdsToDelete.add(q.getId());
-            }
-        }
-
-        // Delete removed Answers
-        System.out.println("==============4");
-        answerRepository.deleteAllById(answerIdsToDelete);
-
-        // Remove references from QCM before deleting questions
-        System.out.println("==============5");
-        qcm.getQuestions().removeIf(q -> questionIdsToDelete.contains(q.getId()));
-        qcmRepository.saveAndFlush(qcm);
-
-        // Now delete questions from the repository
-        System.out.println("==============6");
-        questionRepository.deleteAllById(questionIdsToDelete);
-        System.out.println("==============7");
-        qcmRepository.saveAndFlush(qcm);
-        System.out.println("==============8");
-        return convertToListDto(qcm);
-    }
 
     @Transactional
     public QcmListDTO updateQcmFromYaml_old(Long qcmId, String yamlContent,QcmDTO dto ) throws Exception {
@@ -815,7 +720,7 @@ public class QcmService {
      * @return
      * @throws Exception
      */
-    public QcmListDTO  defaultParseQCMTextToUpdateQCM(Long id, QcmWithTextDTO dto) throws Exception {
+    public Qcm  defaultParseQCMTextToUpdateQCM(Long id, QcmWithTextDTO dto) throws Exception {
         String content = dto.getText();
         Qcm qcm = this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
         qcm = this.formatQcm(dto.getDto(), qcm);
@@ -882,7 +787,7 @@ public class QcmService {
             for(Question q: questionsToSave)
                 answerRepository.saveAllAndFlush(q.getAnswers());
         }
-        return convertToListDto(qcm) ;
+        return qcm ;
     }
 
     /**

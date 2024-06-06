@@ -53,8 +53,8 @@ public class QcmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<QcmListDTO> browse(@PathVariable Long id){
-        QcmListDTO qcm = this.qcmService.read(id);
+    public ResponseEntity<Object> browse(@PathVariable Long id){
+        Qcm qcm = this.qcmService.read(id);
         if (qcm == null){
             throw new ResourceNotFoundException("qcm not found");
         }
@@ -63,8 +63,8 @@ public class QcmController {
 
 
     @PostMapping
-    public @ResponseBody ResponseEntity<QcmListDTO> create(@RequestBody QcmDTO qcmDTO){
-        QcmListDTO qcm = this.qcmService.create(qcmDTO);
+    public @ResponseBody ResponseEntity<Object> create(@RequestBody QcmDTO qcmDTO){
+        Qcm qcm = this.qcmService.create(qcmDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(qcm);
     }
 
@@ -147,7 +147,7 @@ public class QcmController {
         qcmRequest.setCloseStartDate(closeStartDate);
         QcmWithTextDTO dto = new QcmWithTextDTO();
         dto.setDto(qcmRequest);
-        QcmListDTO qcmList = null;
+        Qcm qcmList = null;
         try {
             String content = new String(file.getBytes());
             dto.setText(content);
@@ -238,8 +238,8 @@ public class QcmController {
     }
 
     @PutMapping("/update/{id}")
-    public @ResponseBody ResponseEntity<QcmListDTO> update(@PathVariable Long id, @RequestBody QcmDTO qcmDTO){
-        QcmListDTO qcm = this.qcmService.update(id, qcmDTO);
+    public @ResponseBody ResponseEntity<Qcm> update(@PathVariable Long id, @RequestBody QcmDTO qcmDTO){
+        Qcm qcm = this.qcmService.update(id, qcmDTO);
         return ResponseEntity.status(HttpStatus.OK).body(qcm);
     }
     @DeleteMapping("/delete/{id}")
@@ -275,7 +275,7 @@ public class QcmController {
             QcmCreateJSONDto dto = new QcmCreateJSONDto();
             dto.setTeacherId(teacherId);
             dto.setLevelId(levelId);
-            QcmListDTO qcmListDTO = qcmService.createQCMFromJSON(json, dto);
+            Qcm qcmListDTO = qcmService.createQCMFromJSON(json, dto);
             return ResponseEntity.status(HttpStatus.OK).body(qcmListDTO);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON: " + e.getMessage());
