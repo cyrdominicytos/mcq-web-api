@@ -11,8 +11,10 @@ public class QcmDTO {
     private int limitQuestion;
     private int delay;
     private String title;
+    private String details;
     private int complexity;
     private boolean isRandomActive = false;
+    private boolean canShowResultToStudents = false;
     private boolean isActive = true;
     private LocalDateTime openStartDate; // Timestamp or LocalDateTime ? Which do you prefer ?
     private LocalDateTime closeStartDate;

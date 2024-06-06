@@ -48,19 +48,25 @@ public class ParserService {
 
         StringBuilder currentText = new StringBuilder();
         String currentMarker = "";
-
-        for (String line : lines) {
+        currentLineNumber = 0;
+        for (String line : lines)
+        {
             currentLineNumber++;
             Matcher questionMatcher = questionPattern.matcher(line);
             Matcher metaMatcher = metaPattern.matcher(line);
             Matcher propositionMatcher = propositionPattern.matcher(line);
 
-            if (questionMatcher.matches()) {
+            if (questionMatcher.matches())
+            {
                 //We found new question while we already have one
                 if (currentQuestion != null && !currentMarker.isEmpty()) {
+                    if ((currentMarker.equals(VALID_ANSWER) || currentMarker.equals(UN_VALID_ANSWER))) {
+                        addPropositionToCurrentQuestion(currentQuestion, currentText.toString().trim(), currentMarker.equals(VALID_ANSWER));
+                    }
                     saveAndCloseQuestion(currentQuestion, questions);
                     currentQuestion = null;
                 }
+
                 currentText.setLength(0);  // Clear the buffer
                 currentText.append(questionMatcher.group(1).trim());
                 currentMarker = "question";
@@ -68,21 +74,20 @@ public class ParserService {
                 currentQuestion.setQcm(qcm);
             } else if (metaMatcher.matches()) {
                 if(currentQuestion==null)
-                    throw new ResourceNotFoundException("Invalid format line "+currentLineNumber+": The properties related to a specific question should be after the question and before its aswers");
+                    throw new ResourceNotFoundException("Invalid format line "+currentLineNumber+": You should specify a question before adding some answers");
 
                 if (currentMarker.equals("question")) {
                     currentQuestion.setTitle(currentText.toString());
                 } else if (!currentText.toString().trim().isEmpty()) {
-                    throw new ResourceNotFoundException("Invalid format line "+currentLineNumber+": The properties related to a specific question should be after the question and before its aswers");
+                    throw new ResourceNotFoundException("Invalid format line "+currentLineNumber+": The properties related to a specific question should be after the question and before its answers");
                 }
                 saveMeta(currentQuestion, metaMatcher.group(1).trim(), metaMatcher.group(2).trim());
-                //hasLevel = true;
                 currentText.setLength(0);  // Clear the buffer
                 currentMarker = "meta";
-            } else if (propositionMatcher.matches()) {
+            } else if (propositionMatcher.matches())
+            {
                 if(currentQuestion==null)
                     throw new ResourceNotFoundException("Invalid format line "+currentLineNumber+": You should specify a question before adding some answers");
-
 
                 if (currentMarker.equals("question")) {
                     currentQuestion.setTitle(currentText.toString());
@@ -92,7 +97,8 @@ public class ParserService {
                 currentText.setLength(0);  // Clear the buffer
                 currentText.append(propositionMatcher.group(2).trim());
                 currentMarker = propositionMatcher.group(1).trim();
-            } else if (!line.trim().isEmpty()) {
+            } else if (!line.trim().isEmpty())
+            {
                 //We skip the white line
                 if (!currentText.isEmpty()) {
                     currentText.append("\n");
@@ -102,6 +108,9 @@ public class ParserService {
         }
 
         if (currentQuestion != null && !currentMarker.isEmpty()) {
+            if ((currentMarker.equals(VALID_ANSWER) || currentMarker.equals(UN_VALID_ANSWER))) {
+                addPropositionToCurrentQuestion(currentQuestion, currentText.toString().trim(), currentMarker.equals(VALID_ANSWER));
+            }
             saveAndCloseQuestion(currentQuestion, questions);
             currentQuestion = null;
         }
@@ -109,7 +118,7 @@ public class ParserService {
     }
 
     private void saveAndCloseQuestion(Question question, List<Question> questions) throws ResourceNotFoundException {
-      System.out.println("============In saveAndCloseQuestion===========");
+      //System.out.println("============In saveAndCloseQuestion===========");
        if(question != null && !question.getAnswers().isEmpty()){
            questions.add(question);
        }else  throw new ResourceNotFoundException("Invalid format line "+currentLineNumber+":  missing answers for question: " + question.getTitle());
@@ -123,6 +132,7 @@ public class ParserService {
         answer.setValid(isCorrect);
         answer.setQuestion(question);
         question.getAnswers().add(answer);
+
     }
 
     private void saveMeta(Question question, String key, String value) throws  Exception{
