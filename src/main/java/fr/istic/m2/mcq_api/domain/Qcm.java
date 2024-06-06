@@ -33,8 +33,11 @@ public class Qcm {
     private boolean isActive;
     private int delay;
     private String title;
+    private String details;
     private int complexity;
     private boolean isRandomActive = false;
+    private boolean canShowResultToStudents = false;
+
     private LocalDateTime openStartDate;
     private LocalDateTime closeStartDate;
     private LocalDateTime creationDate = LocalDateTime.now();

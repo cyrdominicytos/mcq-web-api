@@ -12,8 +12,10 @@ public class QcmToTextDTO {
     private int delay;
     private boolean isActive;
     private String title;
+    private String details;
     private int complexity;
     private boolean isRandomActive = false;
+    private boolean canShowResultToStudents = false;
     private LocalDateTime openStartDate;
     private LocalDateTime closeStartDate;
     private LocalDateTime creationDate;
@@ -27,7 +29,9 @@ public class QcmToTextDTO {
         QcmToTextDTO dto = new QcmToTextDTO();
         dto.setId(qcm.getId());
         dto.setTitle(qcm.getTitle());
+        dto.setDetails(qcm.getDetails());
         dto.setActive(qcm.isActive());
+        dto.setCanShowResultToStudents(qcm.isCanShowResultToStudents());
         dto.setComplexity(qcm.getComplexity());
         dto.setCloseStartDate(qcm.getCloseStartDate());
         dto.setOpenStartDate(qcm.getOpenStartDate());

@@ -82,6 +82,8 @@ public class QcmService {
         qcm.setComplexity(qcm.getComplexity());
         qcm.setRandomActive(qcm.isRandomActive());
         qcm.setTitle(qcmDTO.getTitle());
+        qcm.setDetails(qcmDTO.getDetails());
+        qcm.setCanShowResultToStudents(qcmDTO.isCanShowResultToStudents());
         qcm.setOpenStartDate(qcmDTO.getOpenStartDate());
         qcm.setCloseStartDate(qcmDTO.getCloseStartDate());
         qcm.setUpdatedDate(LocalDateTime.now());
@@ -104,6 +106,8 @@ public class QcmService {
         result.setTeacher(TeacherService.convertToTeacherList(source.getTeacher()));
 
         result.setRandomActive(source.isRandomActive());
+        result.setDetails(source.getDetails());
+        result.setCanShowResultToStudents(source.isCanShowResultToStudents());
         result.setTitle(source.getTitle());
         result.setComplexity(source.getComplexity());
         return result;
