@@ -60,33 +60,38 @@ public class QuestionStatisticService {
     }
 
     public List<UnAnswerQuestionDTO> unAnswerQuestionsStats(Qcm qcm){
-        Set<Long> studentsIds =  qcm.getStudentTestList()
-                .stream()
-                .map(s -> s.getStudent().getId())
-                .collect(Collectors.toSet());
-        Logger.getGlobal().info("TOTALL STUDENT= "+ studentsIds.getClass());
+
+        List<StudentTest> studentTests =  qcm.getStudentTestList();
         List<UnAnswerQuestionDTO> answerQuestionDTOList = new ArrayList<>();
-        qcm.getQuestions().forEach(q -> answerQuestionDTOList.add(this.unAnswerCount(q, studentsIds)));
+        List<Question> questions = qcm.getQuestions();
+        for (Question question: questions){
+            UnAnswerQuestionDTO unAnswerQuestionDTO = new UnAnswerQuestionDTO();
+            unAnswerQuestionDTO.setQuestionId(question.getId());
+            int count = 0;
+            for (StudentTest studentTest : studentTests) {
+                List<Long> studentAnswersIds = new ArrayList<>();
+                studentTest.getStudentTestAnswer().forEach(studentTestAnswer -> {
+                    studentAnswersIds.add(studentTestAnswer.getAnswer().getId());
+                });
+                if (this.isAnswered(question, studentAnswersIds)){
+                    count++;
+                }
+            }
+            unAnswerQuestionDTO.setCount(count);
+            answerQuestionDTOList.add(unAnswerQuestionDTO);
+        }
         return answerQuestionDTOList;
     }
 
 
-    public UnAnswerQuestionDTO unAnswerCount(Question question, Set<Long> studentsIds){
-        UnAnswerQuestionDTO answerQuestionDTO = new UnAnswerQuestionDTO();
-        Set<Long> answerStudentIds =  new HashSet<>();
-        List<Answer> answers = question.getAnswers();
-        for (Answer answer : answers){
-            answer.getStudentTestAnswers()
-                    .forEach(s -> answerStudentIds.add(s.getStudentTest().getStudent().getId()));
-        }
-        Integer count = 0;
-        for (Long id : studentsIds){
-            if (!answerStudentIds.contains(id)){
-                count++;
+    public boolean isAnswered(Question question, List<Long> studentAnswersIds){
+
+        List<Answer> questionAnswers = question.getAnswers();
+        for (Answer questionAnswer : questionAnswers) {
+            if (studentAnswersIds.contains(questionAnswer.getId())){
+                return true;
             }
         }
-        answerQuestionDTO.setCount(count);
-        answerQuestionDTO.setQuestionId(question.getId());
-        return answerQuestionDTO;
+        return false;
     }
 }
