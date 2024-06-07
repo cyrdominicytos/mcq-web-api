@@ -33,6 +33,7 @@ public class Qcm {
     private boolean isActive;
     private int delay;
     private String title;
+    @Lob
     private String details;
     private int complexity;
     private boolean isRandomActive = false;

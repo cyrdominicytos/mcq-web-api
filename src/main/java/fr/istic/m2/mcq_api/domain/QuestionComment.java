@@ -17,7 +17,9 @@ public class QuestionComment {
     @ManyToOne
     @JsonIgnore
     private Question question;
+    @Lob
     private String suggestion;
+    @Lob
     private String description;
     private boolean isAccepted = false;
     private LocalDateTime creationDate;
