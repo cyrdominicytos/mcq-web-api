@@ -18,6 +18,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletResponse;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -711,7 +712,7 @@ public class QcmService {
             questionRepository.saveAll(questions);
             for(Question q: questions)
                 answerRepository.saveAllAndFlush(q.getAnswers());
-        }
+        }else throw new BadRequestException("UnAuthorized action : You should add some questions to create a MCQ ");
         return  questions;
     }
 

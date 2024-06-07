@@ -16,7 +16,9 @@ public class AnswerComment {
     @ManyToOne
     @JsonIgnore
     private Answer answer;
+    @Lob
     private String suggestion;
+    @Lob
     private String description;
     private boolean isAccepted = false;
     private LocalDateTime creationDate;
