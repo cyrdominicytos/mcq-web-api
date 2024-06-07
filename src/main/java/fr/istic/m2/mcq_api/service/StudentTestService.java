@@ -44,6 +44,13 @@ public class StudentTestService {
                 .orElseThrow(()-> new ResourceNotFoundException("StudentTest", "id", studentTestId));
         return convertToStudentTestList(studentTest);
     }
+    public List<StudentTestListDto> getStudentTestByStudentId(Long studentId)  throws ResourceNotFoundException {
+        List<StudentTest> studentTestList =  studentTestRepository.findStudentTestByStudentId(studentId);
+        List<StudentTestListDto> list = new ArrayList<>();
+        for(StudentTest s: studentTestList)
+            list.add(convertToStudentTestList(s));
+        return list;
+    }
 
     public List<StudentTestListDto> getStudentTests() {
         List<StudentTest> list =  studentTestRepository.findAll();
