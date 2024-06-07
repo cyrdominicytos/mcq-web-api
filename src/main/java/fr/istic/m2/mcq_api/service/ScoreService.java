@@ -11,6 +11,7 @@ import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.AnswerRepository;
 import fr.istic.m2.mcq_api.repository.QcmRepository;
 import fr.istic.m2.mcq_api.repository.ScoreRepository;
+import fr.istic.m2.mcq_api.service.statistic.QuestionStatisticService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,14 +23,17 @@ public class ScoreService {
     private final QcmRepository qcmRepository;
     private final AnswerRepository answerRepository;
     private final ScoreRepository scoreRepository;
+    private final QuestionStatisticService questionStatisticService;
 
     public ScoreService(QcmRepository qcmRepository,
                         AnswerRepository answerRepository,
-                        ScoreRepository scoreRepository
+                        ScoreRepository scoreRepository,
+                        QuestionStatisticService questionStatisticService
                         ){
         this.qcmRepository = qcmRepository;
         this.answerRepository = answerRepository;
         this.scoreRepository = scoreRepository;
+        this.questionStatisticService = questionStatisticService;
     }
 
     public Integer getQcmTotalValidAnswer(Long qcmId){
@@ -86,6 +90,7 @@ public class ScoreService {
         statDTO.setHighScore(this.scoreRepository.getTheHighScoreByQcmId(qcm.getId()));
         statDTO.setMinScore(this.scoreRepository.getMinScoreByQcmId(qcm.getId()));
         statDTO.setAverageScore(scoreRepository.getAverageScoreByQcmId(qcm.getId()));
+        statDTO.setUnAnswerQuestions(this.questionStatisticService.unAnswerQuestionsStats(qcm));
         return statDTO;
     }
 
