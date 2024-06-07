@@ -279,7 +279,7 @@ public class QcmService {
             questionRepository.saveAllAndFlush(questionList);
             answerRepository.saveAllAndFlush(answerList);
         }
-        return qcm;
+        return this.read(qcm.getId());
         //return convertToListDto(qcm);
     }
 
@@ -729,7 +729,7 @@ public class QcmService {
         List<Question> oldQuestionList = qcm.getQuestions();
         List<Answer> answersToSave = new ArrayList<>();
         List<Question> questionsToSave = new ArrayList<>();
-         //System.out.println("=======QCMID = "+qcm.getId()+" q1="+oldQuestionList.size()+" q2="+oldQuestionList2.size()+" q3="+qcm.getQuestions().size());
+        //System.out.println("=======QCMID = "+qcm.getId()+" q1="+oldQuestionList.size()+" q2="+oldQuestionList2.size()+" q3="+qcm.getQuestions().size());
 
         //Tout est Okay, même nombre d'élement
         int qIndex = 0;

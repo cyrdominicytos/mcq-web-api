@@ -153,14 +153,15 @@ public class ParserService {
     public String convertQuestionsToText(List<Question> questions) {
         StringBuilder sb = new StringBuilder();
         for (Question question : questions) {
-            sb.append("* ").append(question.getTitle()).append("\n");
+            sb.append("* ").append(question.getTitle()).append("\n\n");
             //add question properties details
             sb.append(":").append(IS_ACTIVE).append(" ").append(question.isActive()).append("\n");
             sb.append(":").append(COMPLEXITY_KEY).append(" ").append(question.getComplexity()).append("\n");
-            sb.append(":").append(DELAY_KEY).append(" ").append(question.getDelay()).append("\n");
+            sb.append(":").append(DELAY_KEY).append(" ").append(question.getDelay()).append("\n\n");
             for (Answer a : question.getAnswers()) {
                 sb.append(a.isValid() ? "+" : "-").append(" ").append(a.getTitle()).append("\n");
             }
+            sb.append("\n\n\n");
         }
         return sb.toString();
     }
