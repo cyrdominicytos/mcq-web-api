@@ -276,8 +276,8 @@ public class QcmController {
             QcmCreateJSONDto dto = new QcmCreateJSONDto();
             dto.setTeacherId(teacherId);
             dto.setLevelId(levelId);
-            Qcm qcmListDTO = qcmService.createQCMFromJSON(json, dto);
-            return ResponseEntity.status(HttpStatus.OK).body(qcmListDTO);
+            Qcm qcm = qcmService.createQCMFromJSON(json, dto);
+            return ResponseEntity.status(HttpStatus.OK).body(qcm);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON: " + e.getMessage());
         }
