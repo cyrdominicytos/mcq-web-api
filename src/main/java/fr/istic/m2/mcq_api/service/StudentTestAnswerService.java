@@ -46,6 +46,12 @@ public class StudentTestAnswerService {
         for(StudentTestAnswer o: list)
             result.add(convertToStudentTestAnswerList(o));
         return result;
+    }  public List<StudentTestAnswerListDto> getAllByStudentTest(Long studentTestId) {
+        List<StudentTestAnswer> list =  studentTestAnswerRepository.findStudentTestAnswersByStudentTestId(studentTestId);
+        List<StudentTestAnswerListDto> result = new ArrayList<>();
+        for(StudentTestAnswer o: list)
+            result.add(convertToStudentTestAnswerList(o));
+        return result;
     }
 
     public StudentTestAnswerListDto updateStudentTestAnswer(Long studentTestAnswerId, StudentTestAnswerDto studentTestAnswerDto) throws ResourceNotFoundException {

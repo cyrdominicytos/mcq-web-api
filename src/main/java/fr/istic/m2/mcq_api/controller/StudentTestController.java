@@ -33,6 +33,14 @@ public class StudentTestController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(object);
     }
+    @GetMapping("/getByStudentId/{id}")
+    public ResponseEntity<Object> getByStudentId(@PathVariable Long id){
+        List<StudentTestListDto> object = this.studentTestService.getStudentTestByStudentId(id);
+        if (object == null){
+            throw new ResourceNotFoundException("StudentTest with id "+id + " doesn't exist !");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(object);
+    }
 
     @PostMapping
     public @ResponseBody ResponseEntity<StudentTestListDto> create(@RequestBody StudentTestDto dto){

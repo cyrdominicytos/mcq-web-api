@@ -23,6 +23,11 @@ public class StudentTestAnswerController {
         List<StudentTestAnswerListDto> objectList = this.studentTestAnswerService.getStudentTestAnswers();
         return ResponseEntity.status(HttpStatus.OK).body(objectList);
     }
+    @GetMapping("/getAllByStudentTest/{studentTestId}")
+    public ResponseEntity<Object> getAllByStudentTest(@PathVariable Long studentTestId){
+        List<StudentTestAnswerListDto> objectList = this.studentTestAnswerService.getAllByStudentTest(studentTestId);
+        return ResponseEntity.status(HttpStatus.OK).body(objectList);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<StudentTestAnswerListDto> getById(@PathVariable Long id){
         StudentTestAnswerListDto object = this.studentTestAnswerService.getStudentTestAnswerById(id);
