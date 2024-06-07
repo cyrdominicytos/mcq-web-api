@@ -16,6 +16,7 @@ import java.util.List;
 @Repository
 public interface StudentTestAnswerRepository extends JpaRepository<StudentTestAnswer, Long> {
     List<StudentTestAnswer> findByAnswerIn(List<Answer> answers);
-    @Query("SELECT s FROM StudentTestAnswer s WHERE s.studentTest.id = :studentId")
+
+    @Query("SELECT s FROM StudentTestAnswer s WHERE s.studentTest.id = :studentTestId")
     List<StudentTestAnswer> findStudentTestAnswersByStudentTestId(@Param("studentTestId") Long studentTestId);
 }
