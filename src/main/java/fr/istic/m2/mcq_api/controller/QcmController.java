@@ -71,7 +71,6 @@ public class QcmController {
 
     /**
      * This fonction is using custom parser
-     * @param file
      * @param levelId
      * @param teacherId
      * @param limitQuestion
@@ -84,8 +83,9 @@ public class QcmController {
      * @param closeStartDate
      * @return
      */
-    @PostMapping("/createQCMFromString")
-    public @ResponseBody ResponseEntity<Object> createQCMFromString(@RequestParam("file") MultipartFile file,
+    @PostMapping("/createQCMFromString2")
+    public @ResponseBody ResponseEntity<Object> createQCMFromString2(
+          @RequestParam  String content,
           @RequestParam Long levelId,
           @RequestParam Long teacherId,
           @RequestParam int limitQuestion,
@@ -112,6 +112,63 @@ public class QcmController {
         dto.setDto(qcmRequest);
         List<Question> qcmList = null;
         try {
+            //String content = new String(file.getBytes());
+            dto.setText(content);
+            qcmList = this.qcmService.defaultParseQCMText(dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(qcmList.size());
+    }
+
+    /**
+     * This fonction is using custom parser
+     * @param file
+     * @param levelId
+     * @param teacherId
+     * @param limitQuestion
+     * @param delay
+     * @param title
+     * @param complexity
+     * @param isRandomActive
+     * @param isActive
+     * @param openStartDate
+     * @param closeStartDate
+     * @return
+     */
+    @PostMapping("/createQCMFromString")
+    public @ResponseBody ResponseEntity<Object> createQCMFromString(
+          @RequestParam("file") MultipartFile file,
+          @RequestParam Long levelId,
+          @RequestParam Long teacherId,
+          @RequestParam int limitQuestion,
+          @RequestParam int delay,
+          @RequestParam String title,
+          @RequestParam String details,
+          @RequestParam int complexity,
+          @RequestParam boolean isRandomActive,
+          @RequestParam boolean isActive,
+          @RequestParam boolean showResult,
+          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
+          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
+    ){
+        QcmDTO qcmRequest = new QcmDTO();
+        qcmRequest.setDetails(details);
+        qcmRequest.setCanShowResultToStudents(showResult);
+        qcmRequest.setLevelId(levelId);
+        qcmRequest.setTeacherId(teacherId);
+        qcmRequest.setLimitQuestion(limitQuestion);
+        qcmRequest.setDelay(delay);
+        qcmRequest.setTitle(title);
+        qcmRequest.setComplexity(complexity);
+        qcmRequest.setRandomActive(isRandomActive);
+        qcmRequest.setActive(isActive);
+        qcmRequest.setOpenStartDate(openStartDate);
+        qcmRequest.setCloseStartDate(closeStartDate);
+        QcmWithTextDTO dto = new QcmWithTextDTO();
+        dto.setDto(qcmRequest);
+        List<Question> qcmList = null;
+        try {
             String content = new String(file.getBytes());
             dto.setText(content);
             qcmList = this.qcmService.defaultParseQCMText(dto);
@@ -124,7 +181,7 @@ public class QcmController {
     public @ResponseBody ResponseEntity<Object> updateQCMFromString(
           @PathVariable Long qcmId,
           @RequestParam("file") MultipartFile file,
-          @RequestParam Long levelId,
+          //@RequestParam Long levelId,
           @RequestParam Long teacherId,
           @RequestParam int limitQuestion,
           @RequestParam int delay,
@@ -136,7 +193,7 @@ public class QcmController {
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
     ){
         QcmDTO qcmRequest = new QcmDTO();
-        qcmRequest.setLevelId(levelId);
+        //qcmRequest.setLevelId(levelId);
         qcmRequest.setTeacherId(teacherId);
         qcmRequest.setLimitQuestion(limitQuestion);
         qcmRequest.setDelay(delay);
