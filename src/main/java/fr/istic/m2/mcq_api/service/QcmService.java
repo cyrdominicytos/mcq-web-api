@@ -280,7 +280,6 @@ public class QcmService {
             answerRepository.saveAllAndFlush(answerList);
         }
         return qcm;
-        //return convertToListDto(qcm);
     }
 
     /**
