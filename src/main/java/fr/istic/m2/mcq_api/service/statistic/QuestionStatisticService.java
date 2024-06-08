@@ -64,6 +64,7 @@ public class QuestionStatisticService {
     public List<UnAnswerQuestionDTO> unAnswerQuestionsStats(Qcm qcm){
 
         List<StudentTest> studentTests =  qcm.getStudentTestList();
+        Integer totalTest = studentTests.size();
         List<UnAnswerQuestionDTO> answerQuestionDTOList = new ArrayList<>();
         List<Question> questions = qcm.getQuestions();
         for (Question question: questions){
@@ -79,6 +80,7 @@ public class QuestionStatisticService {
                     count++;
                 }
             }
+            unAnswerQuestionDTO.setTotalTest(totalTest);
             unAnswerQuestionDTO.setCount(count);
             answerQuestionDTOList.add(unAnswerQuestionDTO);
         }
