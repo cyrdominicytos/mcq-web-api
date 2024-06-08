@@ -4,9 +4,7 @@ package fr.istic.m2.mcq_api.service;
 import fr.istic.m2.mcq_api.domain.Answer;
 import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Question;
-import fr.istic.m2.mcq_api.dto.AnswerQcmDTO;
-import fr.istic.m2.mcq_api.dto.QcmStatDTO;
-import fr.istic.m2.mcq_api.dto.QuestionAnswerDTO;
+import fr.istic.m2.mcq_api.dto.*;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.repository.AnswerRepository;
 import fr.istic.m2.mcq_api.repository.QcmRepository;
@@ -84,14 +82,19 @@ public class ScoreService {
         return 1;
     }
 
-    public QcmStatDTO getQcmStats(Long id){
+    public QcmAllStatDTO getQcmStats(Long id){
         Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("qcmid=%d not found", id)));
         QcmStatDTO statDTO = new QcmStatDTO();
         statDTO.setHighScore(this.scoreRepository.getTheHighScoreByQcmId(qcm.getId()));
         statDTO.setMinScore(this.scoreRepository.getMinScoreByQcmId(qcm.getId()));
         statDTO.setAverageScore(scoreRepository.getAverageScoreByQcmId(qcm.getId()));
-        statDTO.setUnAnswerQuestions(this.questionStatisticService.unAnswerQuestionsStats(qcm));
-        return statDTO;
+        List<UnAnswerQuestionDTO> unAnswerQuestionDTOList = this.questionStatisticService.unAnswerQuestionsStats(qcm);
+        statDTO.setUnAnswerQuestions(unAnswerQuestionDTOList);
+        QcmAllStatDTO qcmAllStatDTO = new QcmAllStatDTO();
+        qcmAllStatDTO.setQcm(qcm);
+        qcmAllStatDTO.setQcmStatDTO(statDTO);
+        qcmAllStatDTO.setQuestionsStats(this.questionStatisticService.getQuestionsStatsByQcm(qcm));
+        return qcmAllStatDTO;
     }
 
 }
