@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author Cyriaque TOSSOU, Tuo Adama
@@ -38,6 +36,8 @@ public class SystemInitService {
     private AnswerRepository answerRepository;
     @Autowired
     private YamlParserService yamlParserService;
+    @Autowired
+    private LevelService levelService;
 
     public void init() throws  Exception{
         //Create two levels
@@ -122,7 +122,60 @@ public class SystemInitService {
                 studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
                 System.out.println("Système initialisé avec succès !");
             }
+            this.initLevels();
+            this.initStudents(10);
         } else throw new Exception("Saved without StudentTest because of question");
+    }
+
+
+    public void initLevels() {
+
+        Map<String, String> levels = this.getLevels();
+        levels.forEach((classOfStudy, fieldOfStudy) -> {
+            Level level = this.levelRepository.findOneByClassOfStudyAndFieldOfStudy(classOfStudy, fieldOfStudy);
+            if (level == null){
+                level = new Level();
+                level.setClassOfStudy(classOfStudy);
+                level.setFieldOfStudy(fieldOfStudy);
+                level.setCreationDate(LocalDateTime.now());
+                level.setUpdatedDate(LocalDateTime.now());
+                this.levelRepository.save(level);
+            }
+        });
+    }
+
+
+
+    public Map<String, String> getLevels(){
+        Map<String, String> levels = new HashMap<>();
+        levels.put("L1", "MIAGE");
+        levels.put("L2", "MIAGE");
+        levels.put("L3", "MIAGE");
+        levels.put("M1", "MIAGE");
+        levels.put("M2", "MIAGE");
+        return levels;
+    }
+
+    public List<Student> initStudents(int size) {
+        List<Level> levels = this.levelRepository.findAll();
+        List<Student> students = new ArrayList<>();
+        for (int i = 1; i <= size; i++) {
+            String uuid = "00"+i;
+            Student student = this.studentRepository.findByUuid(uuid);
+            if (student == null){
+                student = new Student();
+                student.setUuid(uuid);
+                student.setFirstName("first_name "+i);
+                student.setLastName("last_name "+i);
+                student.setStudentLevel(levels.get((new Random()).nextInt(levels.size())));
+                student.setCreationDate(LocalDateTime.now());
+                student.setUpdatedDate(LocalDateTime.now());
+                this.studentRepository.saveAndFlush(student);
+            }
+
+            students.add(student);
+        }
+        return students;
     }
 
 }
