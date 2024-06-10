@@ -51,6 +51,9 @@ public class QcmController {
     @GetMapping("/teacher/{id}")
     public @ResponseBody ResponseEntity<List<Qcm>> getAllByTeacherId(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAllTeacherId(id));
+    } @GetMapping("/student/{id}")
+    public @ResponseBody ResponseEntity<List<Qcm>> getAllByStudentId(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAllByStudentId(id));
     }
 
     @GetMapping("/{id}")
@@ -181,29 +184,33 @@ public class QcmController {
     public @ResponseBody ResponseEntity<Object> updateQCMFromString(
           @PathVariable Long qcmId,
           @RequestParam("file") MultipartFile file,
-          //@RequestParam Long levelId,
+          @RequestParam Long levelId,
           @RequestParam Long teacherId,
           @RequestParam int limitQuestion,
           @RequestParam int delay,
           @RequestParam String title,
+          @RequestParam String details,
           @RequestParam int complexity,
           @RequestParam boolean isRandomActive,
           @RequestParam boolean isActive,
+          @RequestParam boolean showResult,
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
-    ){
-        QcmDTO qcmRequest = new QcmDTO();
-        //qcmRequest.setLevelId(levelId);
-        qcmRequest.setTeacherId(teacherId);
-        qcmRequest.setLimitQuestion(limitQuestion);
-        qcmRequest.setDelay(delay);
-        qcmRequest.setTitle(title);
-        qcmRequest.setComplexity(complexity);
-        qcmRequest.setRandomActive(isRandomActive);
-        qcmRequest.setActive(isActive);
-        qcmRequest.setOpenStartDate(openStartDate);
-        qcmRequest.setCloseStartDate(closeStartDate);
-        QcmWithTextDTO dto = new QcmWithTextDTO();
+){
+    QcmDTO qcmRequest = new QcmDTO();
+    qcmRequest.setDetails(details);
+    qcmRequest.setCanShowResultToStudents(showResult);
+    qcmRequest.setLevelId(levelId);
+    qcmRequest.setTeacherId(teacherId);
+    qcmRequest.setLimitQuestion(limitQuestion);
+    qcmRequest.setDelay(delay);
+    qcmRequest.setTitle(title);
+    qcmRequest.setComplexity(complexity);
+    qcmRequest.setRandomActive(isRandomActive);
+    qcmRequest.setActive(isActive);
+    qcmRequest.setOpenStartDate(openStartDate);
+    qcmRequest.setCloseStartDate(closeStartDate);
+    QcmWithTextDTO dto = new QcmWithTextDTO();
         dto.setDto(qcmRequest);
         Qcm qcmList = null;
         try {
@@ -213,7 +220,7 @@ public class QcmController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("QCM mise à jour avec succès !");
+        return ResponseEntity.status(HttpStatus.OK).body(qcmList);
     }
 
     @PutMapping("/getStringFormatOfQCM/{qcmId}/{teacherId}")
@@ -362,7 +369,7 @@ public class QcmController {
     }
 
     @GetMapping("/statistics/{id}")
-    public ResponseEntity<QcmStatDTO> getStatistic(@PathVariable Long id){
+    public ResponseEntity<QcmAllStatDTO> getStatistic(@PathVariable Long id){
         return  ResponseEntity.status(HttpStatus.OK).body(this.scoreService.getQcmStats(id));
     }
 
