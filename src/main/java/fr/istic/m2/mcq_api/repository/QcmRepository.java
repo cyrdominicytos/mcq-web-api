@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface QcmRepository extends JpaRepository<Qcm, Long> {
     List<Qcm> findAllByTeacherId(Long id);
+    Qcm findOneByTitle(String title);
     List<Qcm> findAllByLevelId(Long id);
 }
