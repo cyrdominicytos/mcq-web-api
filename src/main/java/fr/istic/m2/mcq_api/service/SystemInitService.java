@@ -39,6 +39,13 @@ public class SystemInitService {
     @Autowired
     private LevelService levelService;
 
+
+    static final int TEACHER_SIZE = 20;
+    static final int MAX_COMPLEXITY = 10;
+    static final int QCM_SIZE = 30;
+    static final int QUESTION_PER_QCM = 5;
+    static final int ANSWER_PER_QUESTION = 5;
+
     public void init() throws  Exception{
         //Create two levels
         Level level1 = new Level();
@@ -124,13 +131,15 @@ public class SystemInitService {
             }
             this.initLevels();
             this.initStudents(10);
+            this.initQcm(QCM_SIZE, QUESTION_PER_QCM, ANSWER_PER_QUESTION);
         } else throw new Exception("Saved without StudentTest because of question");
     }
 
 
-    public void initLevels() {
+    public List<Level> initLevels() {
 
         Map<String, String> levels = this.getLevels();
+        List<Level> allLevels = new ArrayList<>();
         levels.forEach((classOfStudy, fieldOfStudy) -> {
             Level level = this.levelRepository.findOneByClassOfStudyAndFieldOfStudy(classOfStudy, fieldOfStudy);
             if (level == null){
@@ -141,7 +150,9 @@ public class SystemInitService {
                 level.setUpdatedDate(LocalDateTime.now());
                 this.levelRepository.save(level);
             }
+            allLevels.add(level);
         });
+        return allLevels;
     }
 
 
@@ -156,11 +167,31 @@ public class SystemInitService {
         return levels;
     }
 
+
+    public List<Teacher> getTeachers(){
+        List<Teacher> teachers = new ArrayList<>();
+        for (int i = 1; i <= TEACHER_SIZE; i++) {
+            String uuid = "TEACHER-00"+i;
+            Teacher teacher = this.teacherRepository.findOneByUuid(uuid);
+            if (teacher == null){
+                teacher = new Teacher();
+                teacher.setUuid(uuid);
+                teacher.setFirstName("M. Teach  ");
+                teacher.setFirstName("Dr. Teach "+i);
+                teacher.setCreationDate(LocalDateTime.now());
+                teacher.setUpdatedDate(LocalDateTime.now());
+                this.teacherRepository.saveAndFlush(teacher);
+                teachers.add(teacher);
+            }
+        }
+        return teachers;
+    }
+
     public List<Student> initStudents(int size) {
         List<Level> levels = this.levelRepository.findAll();
         List<Student> students = new ArrayList<>();
         for (int i = 1; i <= size; i++) {
-            String uuid = "00"+i;
+            String uuid = "STUDENT-00"+i;
             Student student = this.studentRepository.findByUuid(uuid);
             if (student == null){
                 student = new Student();
@@ -176,6 +207,74 @@ public class SystemInitService {
             students.add(student);
         }
         return students;
+    }
+
+    public List<Qcm> initQcm(int sizeQcm, int sizeQuestionPerQcm, int sizeAnswerPerQuestion){
+        List<Level> levels = this.initLevels();
+        List<Teacher> teachers = this.getTeachers();
+        List<Qcm> qcmList = new ArrayList<>();
+        LocalDateTime currentDate = LocalDateTime.now();
+        Random random = new Random();
+        for (int i = 1; i <= sizeQcm; i++) {
+            String title = "Qcm "+i;
+            Qcm qcm = this.qcmRepository.findOneByTitle(title);
+            Teacher teacher = teachers.get(random.nextInt(teachers.size()));
+            Level level = levels.get(random.nextInt(levels.size()));
+            if (qcm == null){
+                qcm = new Qcm();
+                qcm.setTitle(title);
+                qcm.setDelay(random.nextInt(100));
+                qcm.setLevel(level);
+                qcm.setDetails("Detail QCM "+i);
+                qcm.setLimitQuestion(sizeQuestionPerQcm);
+                qcm.setActive(true);
+                qcm.setTeacher(teacher);
+                qcm.setComplexity(random.nextInt(MAX_COMPLEXITY));
+                qcm.setCanShowResultToStudents(random.nextBoolean());
+                qcm.setRandomActive(random.nextBoolean());
+                qcm.setCloseStartDate(currentDate);
+                qcm.setOpenStartDate(currentDate);
+                qcm.setCreationDate(currentDate);
+                qcm.setUpdatedDate(currentDate);
+                for (int j = 1; j <= sizeQuestionPerQcm; j++) {
+                    qcm.getQuestions().add(this.getRandomQuestion(qcm,  i, sizeAnswerPerQuestion));
+                }
+                this.qcmRepository.saveAndFlush(qcm);
+                qcmList.add(qcm);
+            }
+        }
+        return qcmList;
+    }
+
+
+    public Question getRandomQuestion(Qcm qcm, int number, int sizeAnswers){
+        LocalDateTime currentDate = LocalDateTime.now();
+        Question question = new Question();
+        Random random = new Random();
+        question.setTitle("Question "+number+"[QCM="+qcm.getTitle()+"]");
+        question.setQcm(qcm);
+        question.setDelay(random.nextInt());
+        question.setActive(random.nextBoolean());
+        question.setComplexity(random.nextInt(MAX_COMPLEXITY));
+        question.setCreationDate(currentDate);
+        question.setUpdatedDate(currentDate);
+        for (int i = 1; i <= sizeAnswers; i++) {
+            question.getAnswers().add(this.getRandomAnswer(question, i));
+        }
+        return question;
+    }
+
+    public Answer getRandomAnswer(Question question, int id){
+        Answer answer = new Answer();
+        Random random = new Random();
+        answer.setQuestion(question);
+        answer.setValid(random.nextBoolean());
+        answer.setTitle("Answer "+id);
+        answer.setNbrPoint(random.nextInt(10));
+        answer.setActive(random.nextBoolean());
+        answer.setCreationDate(LocalDateTime.now());
+        answer.setUpdatedDate(LocalDateTime.now());
+        return answer;
     }
 
 }

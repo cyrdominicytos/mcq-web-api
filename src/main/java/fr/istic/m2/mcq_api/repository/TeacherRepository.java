@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
-    // You can define additional methods here if needed
+    public Teacher findOneByUuid(String uuid);
 }
