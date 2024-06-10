@@ -22,6 +22,8 @@ public class QcmToTextDTO {
     private LocalDateTime updatedDate;
     private int testCount;
     private int questionCount;
+    private Long levelId;
+    private Long teacherId;
 
     private  String content = "";
 
@@ -43,6 +45,8 @@ public class QcmToTextDTO {
         dto.setCreationDate(qcm.getCreationDate());
         dto.setUpdatedDate(qcm.getUpdatedDate());
         dto.setContent(text);
+        dto.setLevelId(qcm.getLevel().getId());
+        dto.setTeacherId(qcm.getTeacher().getId());
 
         return dto;
     }

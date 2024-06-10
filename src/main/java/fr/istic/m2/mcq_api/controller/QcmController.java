@@ -181,7 +181,7 @@ public class QcmController {
     public @ResponseBody ResponseEntity<Object> updateQCMFromString(
           @PathVariable Long qcmId,
           @RequestParam("file") MultipartFile file,
-          //@RequestParam Long levelId,
+          @RequestParam Long levelId,
           @RequestParam Long teacherId,
           @RequestParam int limitQuestion,
           @RequestParam int delay,
@@ -193,7 +193,7 @@ public class QcmController {
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
     ){
         QcmDTO qcmRequest = new QcmDTO();
-        //qcmRequest.setLevelId(levelId);
+        qcmRequest.setLevelId(levelId);
         qcmRequest.setTeacherId(teacherId);
         qcmRequest.setLimitQuestion(limitQuestion);
         qcmRequest.setDelay(delay);
