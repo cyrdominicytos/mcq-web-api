@@ -21,3 +21,62 @@ Option 3 suite
 Option 1 suite
 - Option 2
 Option 2 suite
+
+
+
+
+
+
+
+
+
+
+
+* Quelle est la capitale de l'Australie ?
+
+:active false
+:complexity 0
+:delay 0
+
++ Canberra
+- Sydney
+- Melbourne
+
+
+
+* Quelle est la capitale de la France ?
+
+:active false
+:complexity 1
+:delay 12
+
++ Paris
+- Lyon
++ Grenoble
+
+
+
+* En quelle année a eu lieu la Révolution française ?
+
+:active false
+:complexity 0
+:delay 0
+
++ 1789
+- 1776
+- 1804
+
+
+
+* Qui a peint la Joconde ?
+
+:active false
+:complexity 0
+:delay 0
+
+- Vincent van Gogh
++ Léonard de Vinci
+- Pablo Picasso
+
+
+

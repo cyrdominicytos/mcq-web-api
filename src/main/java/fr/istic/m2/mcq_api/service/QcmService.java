@@ -45,6 +45,8 @@ public class QcmService {
     @Autowired
     private TeacherRepository teacherRepository;
     @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
     private ParserService parserService;
     @PersistenceContext
     private EntityManager em;
@@ -694,6 +696,12 @@ public class QcmService {
 
     public List<Qcm> getAllTeacherId(Long id) {
         return this.qcmRepository.findAllByTeacherId(id);
+
+    }
+    public List<Qcm> getAllByStudentId(Long id) {
+        Student student = this.studentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Student", "id", id));
+        Level level = this.levelRepository.findById(student.getStudentLevel().getId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", student.getStudentLevel().getId()));
+        return this.qcmRepository.findAllByLevelId(level.getId());
 
     }
 
