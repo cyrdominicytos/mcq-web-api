@@ -189,24 +189,28 @@ public class QcmController {
           @RequestParam int limitQuestion,
           @RequestParam int delay,
           @RequestParam String title,
+          @RequestParam String details,
           @RequestParam int complexity,
           @RequestParam boolean isRandomActive,
           @RequestParam boolean isActive,
+          @RequestParam boolean showResult,
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime openStartDate,
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime closeStartDate
-    ){
-        QcmDTO qcmRequest = new QcmDTO();
-        qcmRequest.setLevelId(levelId);
-        qcmRequest.setTeacherId(teacherId);
-        qcmRequest.setLimitQuestion(limitQuestion);
-        qcmRequest.setDelay(delay);
-        qcmRequest.setTitle(title);
-        qcmRequest.setComplexity(complexity);
-        qcmRequest.setRandomActive(isRandomActive);
-        qcmRequest.setActive(isActive);
-        qcmRequest.setOpenStartDate(openStartDate);
-        qcmRequest.setCloseStartDate(closeStartDate);
-        QcmWithTextDTO dto = new QcmWithTextDTO();
+){
+    QcmDTO qcmRequest = new QcmDTO();
+    qcmRequest.setDetails(details);
+    qcmRequest.setCanShowResultToStudents(showResult);
+    qcmRequest.setLevelId(levelId);
+    qcmRequest.setTeacherId(teacherId);
+    qcmRequest.setLimitQuestion(limitQuestion);
+    qcmRequest.setDelay(delay);
+    qcmRequest.setTitle(title);
+    qcmRequest.setComplexity(complexity);
+    qcmRequest.setRandomActive(isRandomActive);
+    qcmRequest.setActive(isActive);
+    qcmRequest.setOpenStartDate(openStartDate);
+    qcmRequest.setCloseStartDate(closeStartDate);
+    QcmWithTextDTO dto = new QcmWithTextDTO();
         dto.setDto(qcmRequest);
         Qcm qcmList = null;
         try {
