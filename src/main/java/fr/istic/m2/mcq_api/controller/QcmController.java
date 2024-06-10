@@ -216,7 +216,7 @@ public class QcmController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("QCM mise à jour avec succès !");
+        return ResponseEntity.status(HttpStatus.OK).body("QCM mise à jour avec succès !");
     }
 
     @PutMapping("/getStringFormatOfQCM/{qcmId}/{teacherId}")
