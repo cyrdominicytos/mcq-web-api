@@ -82,8 +82,8 @@ public class QcmService {
         qcm.setLevel(level);
         qcm.setTeacher(teacher);
         qcm.setDelay(qcmDTO.getDelay());
-        qcm.setComplexity(qcm.getComplexity());
-        qcm.setRandomActive(qcm.isRandomActive());
+        qcm.setComplexity(qcmDTO.getComplexity());
+        qcm.setRandomActive(qcmDTO.isRandomActive());
         qcm.setTitle(qcmDTO.getTitle());
         qcm.setDetails(qcmDTO.getDetails());
         qcm.setCanShowResultToStudents(qcmDTO.isCanShowResultToStudents());
