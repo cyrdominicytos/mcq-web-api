@@ -71,6 +71,62 @@ public class YamlParserService {
                       valid: false
                 """;
     }
+    public String getDefautQcmYamlString2() {
+        return  """
+              questions:
+                - title: "Quelle est la capitale de la France ?"
+                  active: false
+                  delay: 30
+                  complexity: 1
+                  answers:
+                    - title: "Paris"
+                      active: true
+                      valid: true
+                    - title: "Londres"
+                      active: true
+                      valid: false
+                    - title: "Berlin"
+                      active: true
+                      valid: false
+                    - title: "Madrid"
+                      active: true
+                      valid: false
+                - title: "Quelle est la plus grande planète du système solaire ?"
+                  active: false
+                  delay: 45
+                  complexity: 2
+                  answers:
+                    - title: "Terre"
+                      active: true
+                      valid: false
+                    - title: "Mars"
+                      active: true
+                      valid: false
+                    - title: "Jupiter"
+                      active: true
+                      valid: true
+                    - title: "Saturne"
+                      active: true
+                      valid: false
+                - title: "Quelle est la formule chimique de l'eau ?"
+                  active: false
+                  delay: 15
+                  complexity: 1
+                  answers:
+                    - title: "H2O"
+                      active: true
+                      valid: true
+                    - title: "CO2"
+                      active: true
+                      valid: false
+                    - title: "O2"
+                      active: true
+                      valid: false
+                    - title: "H2SO4"
+                      active: true
+                      valid: false
+                """;
+    }
 
     /**
      * parse a giving yaml text in to List of question to create QCM

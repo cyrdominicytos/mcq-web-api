@@ -16,6 +16,7 @@ questions:
       - title: "Madrid"
         active: true
         valid: false
+
   - title: "Quelle est la plus grande planète du système solaire ?"
     active: true
     delay: 45

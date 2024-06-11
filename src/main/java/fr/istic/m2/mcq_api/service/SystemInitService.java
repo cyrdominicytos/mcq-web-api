@@ -123,6 +123,24 @@ public class SystemInitService {
                 System.out.println("Système initialisé avec succès !");
             }
         } else throw new Exception("Saved without StudentTest because of question");
+
+        // QCM 2
+        //Create QCM from Yamlfile
+        content = yamlParserService.getDefautQcmYamlString2();
+        qcmDto = new QcmDTO();
+        qcmDto.setTitle("Culture Générale 2");
+        qcmDto.setActive(false);
+        qcmDto.setComplexity(3);
+        qcmDto.setDelay(60);
+        qcmDto.setRandomActive(true);
+        qcmDto.setOpenStartDate(LocalDateTime.now());
+        qcmDto.setTeacherId(teacher1.getId());
+        qcmDto.setLevelId(level1.getId());
+        try {
+            QcmListDTO qcmListDTO =  qcmService.createQCMFromYaml(content, qcmDto);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
