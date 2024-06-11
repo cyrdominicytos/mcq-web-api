@@ -58,21 +58,15 @@ Option 2 suite
 
 * En quelle année a eu lieu la Révolution française ?
 
-:active false
-:complexity 0
-:delay 0
-
 + 1789
 - 1776
 - 1804
 
-
-
 * Qui a peint la Joconde ?
 
 :active false
-:complexity 0
-:delay 0
+:complexity 3
+:delay 20
 
 - Vincent van Gogh
 + Léonard de Vinci

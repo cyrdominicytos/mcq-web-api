@@ -701,8 +701,8 @@ public class QcmService {
     public List<Qcm> getAllByStudentId(Long id) {
         Student student = this.studentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Student", "id", id));
         Level level = this.levelRepository.findById(student.getStudentLevel().getId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", student.getStudentLevel().getId()));
-        return this.qcmRepository.findAllByLevelId(level.getId());
-
+        //return this.qcmRepository.findAllByLevelId(level.getId());
+        return this.qcmRepository.findAllByLevelIdAndQuestionsWithActiveTrue(level.getId());
     }
 
     /**
