@@ -702,7 +702,17 @@ public class QcmService {
         Student student = this.studentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Student", "id", id));
         Level level = this.levelRepository.findById(student.getStudentLevel().getId()).orElseThrow(()-> new ResourceNotFoundException("Level", "id", student.getStudentLevel().getId()));
         //return this.qcmRepository.findAllByLevelId(level.getId());
-        return this.qcmRepository.findAllByLevelIdAndQuestionsWithActiveTrue(level.getId());
+        List<Qcm> qcmList =  this.qcmRepository.findAllByLevelIdAndQuestionsWithActiveTrue(level.getId());
+        if(!qcmList.isEmpty()){
+            for(Qcm qcm: qcmList){
+                List<Question> activeQuestions = qcm.getQuestions().stream()
+                        .filter(Question::isActive)
+                        .collect(Collectors.toList());
+
+                qcm.setQuestions(activeQuestions);
+            }
+        }
+        return  qcmList;
     }
 
     /**

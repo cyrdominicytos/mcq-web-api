@@ -53,7 +53,7 @@ public class YamlParserService {
                       active: true
                       valid: false
                 - title: "Quelle est la formule chimique de l'eau ?"
-                  active: true
+                  active: false
                   delay: 15
                   complexity: 1
                   answers:
