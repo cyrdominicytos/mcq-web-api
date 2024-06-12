@@ -349,12 +349,12 @@ public class SystemInitService {
         return questionCommentList;
     }
 
-    public List<AnswerComment> getAnswerComments(Answer question){
+    public List<AnswerComment> getAnswerComments(Answer answer){
         List<AnswerComment> answerCommentList = new ArrayList<>();
         LocalDateTime currentDate = LocalDateTime.now();
         for (int i = 1; i <= COMMENT_PER_QUESTION; i++) {
             AnswerComment answerComment = new AnswerComment();
-            answerComment.setAnswer(question);
+            answerComment.setAnswer(answer);
             answerComment.setAccepted(false);
             answerComment.setSuggestion("Ceci est une suggestion "+1);
             answerComment.setDescription("Ceci est une description "+1);
