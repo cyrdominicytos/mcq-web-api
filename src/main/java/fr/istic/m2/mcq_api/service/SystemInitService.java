@@ -374,8 +374,8 @@ public class SystemInitService {
             AnswerComment answerComment = new AnswerComment();
             answerComment.setAnswer(answer);
             answerComment.setAccepted(false);
-            answerComment.setSuggestion("Ceci est une suggestion "+1);
-            answerComment.setDescription("Ceci est une description "+1);
+            answerComment.setSuggestion("Ceci est une suggestion "+i);
+            answerComment.setDescription("Ceci est une description "+i);
             answerComment.setCreationDate(currentDate);
             answerComment.setUpdatedDate(currentDate);
             answerCommentList.add(answerComment);
