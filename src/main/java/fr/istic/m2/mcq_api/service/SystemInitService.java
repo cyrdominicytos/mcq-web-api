@@ -51,6 +51,8 @@ public class SystemInitService {
     static final int STUDENT_SIZE = 10;
     static final int MAX_DURATION = 1000 * 3600; // One hour
     static final int TEST_PER_STUDENT = 10; // One hour
+    static final int COMMENT_PER_QUESTION = 10; // One hour
+    static final int COMMENT_PER_ANSWER = 10; // One hour
 
     public void init() throws  Exception{
         //Create two levels
@@ -283,6 +285,7 @@ public class SystemInitService {
         question.setComplexity(random.nextInt(MAX_COMPLEXITY));
         question.setCreationDate(currentDate);
         question.setUpdatedDate(currentDate);
+        question.getComments().addAll(this.getQuestionComments(question));
         for (int i = 1; i <= sizeAnswers; i++) {
             question.getAnswers().add(this.getRandomAnswer(question, i));
         }
@@ -299,6 +302,7 @@ public class SystemInitService {
         answer.setActive(random.nextBoolean());
         answer.setCreationDate(LocalDateTime.now());
         answer.setUpdatedDate(LocalDateTime.now());
+        answer.getComments().addAll(this.getAnswerComments(answer));
         return answer;
     }
 
@@ -344,6 +348,39 @@ public class SystemInitService {
                 answerService.answersQcm(qcm.getId(), answerQcmDTO);
             }
         }
+    }
+
+
+    public List<QuestionComment> getQuestionComments(Question question){
+        List<QuestionComment> questionCommentList = new ArrayList<>();
+        LocalDateTime currentDate = LocalDateTime.now();
+        for (int i = 1; i <= COMMENT_PER_QUESTION; i++) {
+            QuestionComment questionComment = new QuestionComment();
+            questionComment.setQuestion(question);
+            questionComment.setAccepted(false);
+            questionComment.setSuggestion("Ceci est une suggestion "+1);
+            questionComment.setDescription("Ceci est une description "+1);
+            questionComment.setCreationDate(currentDate);
+            questionComment.setUpdatedDate(currentDate);
+            questionCommentList.add(questionComment);
+        }
+        return questionCommentList;
+    }
+
+    public List<AnswerComment> getAnswerComments(Answer answer){
+        List<AnswerComment> answerCommentList = new ArrayList<>();
+        LocalDateTime currentDate = LocalDateTime.now();
+        for (int i = 1; i <= COMMENT_PER_QUESTION; i++) {
+            AnswerComment answerComment = new AnswerComment();
+            answerComment.setAnswer(answer);
+            answerComment.setAccepted(false);
+            answerComment.setSuggestion("Ceci est une suggestion "+1);
+            answerComment.setDescription("Ceci est une description "+1);
+            answerComment.setCreationDate(currentDate);
+            answerComment.setUpdatedDate(currentDate);
+            answerCommentList.add(answerComment);
+        }
+        return answerCommentList;
     }
 
 }
