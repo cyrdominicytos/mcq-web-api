@@ -54,8 +54,6 @@ Option 2 suite
 - Lyon
 + Grenoble
 
-
-
 * En quelle année a eu lieu la Révolution française ?
 
 + 1789
