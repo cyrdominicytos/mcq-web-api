@@ -34,6 +34,7 @@ public class Qcm {
     private int delay;
     private String title;
     @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String details;
     private int complexity;
     private boolean isRandomActive = false;
