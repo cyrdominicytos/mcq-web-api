@@ -264,7 +264,7 @@ public class SystemInitService {
                 qcm.setCreationDate(currentDate);
                 qcm.setUpdatedDate(currentDate);
                 for (int j = 1; j <= QUESTION_PER_QCM; j++) {
-                    qcm.getQuestions().add(this.getRandomQuestion(qcm,  i, ANSWER_PER_QUESTION));
+                    qcm.getQuestions().add(this.getRandomQuestion(qcm,  j, ANSWER_PER_QUESTION));
                 }
                 this.qcmRepository.saveAndFlush(qcm);
             }

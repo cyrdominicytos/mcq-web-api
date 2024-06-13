@@ -5,6 +5,7 @@ import fr.istic.m2.mcq_api.domain.Qcm;
 import fr.istic.m2.mcq_api.domain.Score;
 import fr.istic.m2.mcq_api.dto.AnswerDTO;
 import fr.istic.m2.mcq_api.dto.AnswerQcmDTO;
+import fr.istic.m2.mcq_api.dto.ScoreDTO;
 import fr.istic.m2.mcq_api.exception.ResourceNotFoundException;
 import fr.istic.m2.mcq_api.service.AnswerService;
 import fr.istic.m2.mcq_api.service.ScoreService;
@@ -62,7 +63,7 @@ public class AnswerController {
 
 
     @PostMapping("/qcm/{id}")
-    public @ResponseBody ResponseEntity<Score> answerQcm(@PathVariable Long id, @RequestBody AnswerQcmDTO answers){
+    public @ResponseBody ResponseEntity<ScoreDTO> answerQcm(@PathVariable Long id, @RequestBody AnswerQcmDTO answers){
         return ResponseEntity.status(HttpStatus.OK)
                             .body(this.answerService.answersQcm(id, answers));
     }

@@ -5,39 +5,20 @@ meta {
 }
 
 post {
-  url: {{HOST}}/answer/qcm/1
+  url: {{HOST}}/answer/qcm/21
   body: json
   auth: none
 }
 
 body:json {
   {
-    "studentId": 102,
+    "studentId": 1,
     "answers": [
       {
-        "questionId": 1,
-        "answerId": 3,
-        "duration": 1000
-      },
-      {
-        "questionId": 5,
-        "answerId": 2,
+        "questionId": 100,
+        "answerId": 498,
         "duration": 1000
       }
-    ],
-    "questionsComments":[
-       {
-         "questionId": 1,
-         "description": "description",
-         "suggestion": "ceci est une suggestion"
-       }
-    ],
-    "answersComments": [
-      {
-         "answerId": 1,
-         "description": "description",
-         "suggestion": "ceci est une suggestion"
-       }
     ]
   }
 }
