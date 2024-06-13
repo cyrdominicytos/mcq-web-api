@@ -715,6 +715,12 @@ public class QcmService {
         return  qcmList;
     }
 
+    public List<Qcm> getAllByTeacherId(Long id) {
+        Teacher teacher = this.teacherRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Teacher", "id", id));
+        List<Qcm> qcmList =  this.qcmRepository.findAllByTeacherId(id);
+        return  qcmList;
+    }
+
     /**
      * Function to validate user QCM text and create the QCM if everything is well valued
      * @param dto
@@ -801,6 +807,76 @@ public class QcmService {
             System.out.println("Question current index "+qIndex);
         }
        // qcmRepository.saveAndFlush(qcm);
+        if(!questions.isEmpty()){
+            questionRepository.saveAllAndFlush(questionsToSave);
+            answerRepository.saveAllAndFlush(answersToSave);
+            qcmRepository.saveAndFlush(qcm);
+        }
+        return qcm ;
+    }
+
+
+    public Qcm  defaultParseQCMTextToUpdateQCM_v2(Long id, QcmWithTextDTO dto) throws Exception {
+        String content = dto.getText();
+        Qcm qcm = this.qcmRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Qcm", "id", id));
+        qcm = this.formatQcm(dto.getDto(), qcm);
+
+        List<Question> questions = parserService.parseQCM(content, qcm);
+        List<Question> oldQuestionList = qcm.getQuestions();
+        List<Answer> answersToSave = new ArrayList<>();
+        List<Question> questionsToSave = new ArrayList<>();
+        //System.out.println("=======QCMID = "+qcm.getId()+" q1="+oldQuestionList.size()+" q2="+oldQuestionList2.size()+" q3="+qcm.getQuestions().size());
+
+        //Tout est Okay, même nombre d'élement
+        int qIndex = 0;
+        System.out.println("Question count "+questions.size());
+        if(questions.size() < oldQuestionList.size())
+            throw new ResourceNotFoundException("UnAuthorized action : You can't remove some question during QCM updating");
+
+        for(Question q: questions)
+        {
+            Question oldQuestion = null;
+            if(qIndex<oldQuestionList.size()){
+                //update old questions
+                System.out.println("++++++OLD QUESTION+++++++++++"+qIndex);
+                oldQuestion = this.replaceQuestion(oldQuestionList.get(qIndex), q);
+            }
+            else{
+                //create new Question
+                oldQuestion = new Question();
+                oldQuestion.setQcm(qcm);
+                Question temp = this.replaceQuestion(oldQuestion, q);
+                questionsToSave.add(temp);
+                System.out.println("++++++CREATE NEW QUESTION+++++++++++"+qIndex);
+            }
+            List<Answer> oldAnswerList = oldQuestion.getAnswers();
+            if(q.getAnswers().size() < oldAnswerList.size())
+                throw new ResourceNotFoundException("UnAuthorized action : You can't remove some answer during QCM updating");
+
+            //update question answers
+            int aIndex = 0;
+            for(Answer a: q.getAnswers())
+            {
+                if(aIndex<oldAnswerList.size())
+                {
+                    //update old answer
+                    System.out.println("old answer "+qIndex +" "+aIndex);
+                    this.replaceAnswer(oldAnswerList.get(aIndex), a);
+                }else
+                {
+                    //create new answer
+                    Answer oldAnswer = new Answer();
+                    oldAnswer.setQuestion(oldQuestion);
+                    Answer temp = this.replaceAnswer(oldAnswer, a);
+                    answersToSave.add(temp);
+                    System.out.println("==========new answer "+qIndex +" "+aIndex);
+                }
+                aIndex++;
+            }
+            qIndex++;
+            System.out.println("Question current index "+qIndex);
+        }
+        // qcmRepository.saveAndFlush(qcm);
         if(!questions.isEmpty()){
             qcmRepository.save(qcm);
             questionRepository.saveAll(questionsToSave);

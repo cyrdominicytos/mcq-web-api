@@ -26,9 +26,9 @@ public class Question {
     @JsonIgnore
     private Qcm qcm;
     private String title;
-    private boolean isActive;
-    private int delay;
-    private int complexity;
+    private boolean isActive = true;
+    private int delay = 0;
+    private int complexity = 0;
     private LocalDateTime  creationDate;
     private LocalDateTime  updatedDate;
 

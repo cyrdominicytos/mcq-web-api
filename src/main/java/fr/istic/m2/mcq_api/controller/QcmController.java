@@ -51,9 +51,16 @@ public class QcmController {
     @GetMapping("/teacher/{id}")
     public @ResponseBody ResponseEntity<List<Qcm>> getAllByTeacherId(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAllTeacherId(id));
-    } @GetMapping("/student/{id}")
+    }
+
+    @GetMapping("/student/{id}")
     public @ResponseBody ResponseEntity<List<Qcm>> getAllByStudentId(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAllByStudentId(id));
+    }
+
+    @GetMapping("/getQcmByTeacher/{id}")
+    public @ResponseBody ResponseEntity<List<Qcm>> getQcmByTeacher(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(this.qcmService.getAllByTeacherId(id));
     }
 
     @GetMapping("/{id}")
