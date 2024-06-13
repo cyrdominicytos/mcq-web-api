@@ -118,7 +118,7 @@ public class SystemInitService {
 
         if(!questions.isEmpty()){
             //Create StudentTest
-            StudentTest studentTest = new StudentTest();
+            /*StudentTest studentTest = new StudentTest();
             studentTest.setStartingDate(LocalDateTime.now());
             studentTest.setStudent(student1);
             studentTest.setQcm(qcm);
@@ -136,11 +136,12 @@ public class SystemInitService {
                 studentTestAnswer.setStudentTest(studentTest);
                 studentTestAnswerRepository.saveAndFlush(studentTestAnswer);
                 System.out.println("Système initialisé avec succès !");
-            }
+            }*/
             this.initLevels();
             this.initStudents();
             this.initQcm();
             this.initStudentTestAnswer();
+            System.out.println("Système initialisé avec succès !");
         } else throw new Exception("Saved without StudentTest because of question");
 
         // QCM 2
