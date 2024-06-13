@@ -113,12 +113,12 @@ public class AnswerService {
 
         List<QuestionAnswerDTO> questionAnswerDTOs = answers.getAnswers();
 
-        for(QuestionAnswerDTO q : questionAnswerDTOs){
-            boolean matched = this.isAnswerMatchWithQuestion(q);
-            if (!matched){
-                throw new ResourceNotFoundException(String.format("questionId=%d not matching with answerId=%d", q.getQuestionId(), q.getAnswerId()));
-            }
-        }
+//        for(QuestionAnswerDTO q : questionAnswerDTOs){
+//            boolean matched = this.isAnswerMatchWithQuestion(q);
+//            if (!matched){
+//                throw new ResourceNotFoundException(String.format("questionId=%d not matching with answerId=%d", q.getQuestionId(), q.getAnswerId()));
+//            }
+//        }
 
         StudentTest studentTest = new StudentTest();
         studentTest.setQcm(qcm);
