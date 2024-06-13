@@ -1,5 +1,6 @@
 package fr.istic.m2.mcq_api.domain;
 
+import fr.istic.m2.mcq_api.dto.ScoreDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
