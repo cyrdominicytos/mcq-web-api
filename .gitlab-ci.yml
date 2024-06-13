@@ -15,7 +15,7 @@ deploy:
   stage: deploy
   image: alpine:latest
   script:
-    - ssh $SSH_USER@$VM_IPADDRESS '
+     - ssh $SSH_USER@$VM_IPADDRESS '
         echo "Navigating to qcm_app directory" &&
         cd qcm_app &&
         echo "Pulling latest changes from Git" &&
@@ -25,7 +25,7 @@ deploy:
         echo "Deleting maven:latest image" &&
         docker rmi maven:latest --force &&
         echo "Deleting old images" &&
-        'images=$(docker images -a -q) if [ -n "$images" ]; then docker rmi $images else echo "No Docker images to remove" fi\' &&
+        images=$(docker images -a -q); if [ -n "$images" ]; then docker rmi $images; else echo "No Docker images to remove"; fi &&
         echo "Building and starting Docker containers" &&
         docker-compose up --build -d
       '
