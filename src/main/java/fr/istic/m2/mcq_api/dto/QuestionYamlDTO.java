@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 public class QuestionYamlDTO {
         private String title;
-        private boolean active;
-        private int delay;
-        private int complexity;
+        private boolean active = true;
+        private int delay = 0;
+        private int complexity = 0;
         private List<AnswerYamlDTO> answers;
 
 

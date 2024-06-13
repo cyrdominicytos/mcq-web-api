@@ -11,9 +11,9 @@ import java.util.List;
 @Data
 public class QuestionJSONDTO {
     private String title;
-    private int complexity = 1;
+    private int complexity = 0;
     private boolean isActive = true;
-    private int delay;
+    private int delay = 0;
     List<AnswerJSONDTO> answers = new ArrayList<>();
     public static QuestionJSONDTO format(Question question){
         QuestionJSONDTO dto = new QuestionJSONDTO();

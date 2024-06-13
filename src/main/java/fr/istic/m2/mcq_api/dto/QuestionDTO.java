@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class QuestionDTO {
     private Long qcmId;
-    private int complexity;
-    private boolean isActive;
-    private int delay;
+    private int complexity = 0;
+    private boolean isActive = true;
+    private int delay = 0;
     private String title;
 }
