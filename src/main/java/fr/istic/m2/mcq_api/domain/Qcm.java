@@ -37,7 +37,7 @@ public class Qcm {
     private String details;
     private int complexity;
     private boolean isRandomActive = false;
-    private boolean canShowResultToStudents = false;
+    private boolean canShowResultToStudents = true;
 
     private LocalDateTime openStartDate;
     private LocalDateTime closeStartDate;

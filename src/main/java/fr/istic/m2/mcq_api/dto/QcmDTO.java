@@ -13,7 +13,7 @@ public class QcmDTO {
     private String details;
     private int complexity;
     private boolean isRandomActive = false;
-    private boolean canShowResultToStudents = false;
+    private boolean canShowResultToStudents = true;
     private boolean isActive = true;
     private LocalDateTime openStartDate; // Timestamp or LocalDateTime ? Which do you prefer ?
     private LocalDateTime closeStartDate;

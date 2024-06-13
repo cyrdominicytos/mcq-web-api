@@ -15,7 +15,7 @@ public class QcmToTextDTO {
     private String details;
     private int complexity;
     private boolean isRandomActive = false;
-    private boolean canShowResultToStudents = false;
+    private boolean canShowResultToStudents = true;
     private LocalDateTime openStartDate;
     private LocalDateTime closeStartDate;
     private LocalDateTime creationDate;
