@@ -1,11 +1,11 @@
 meta {
-  name: read
+  name: update
   type: http
-  seq: 4
+  seq: 2
 }
 
-get {
-  url: {{HOST}}/questions/102
+put {
+  url: {{HOST}}/update/6
   body: json
   auth: none
 }

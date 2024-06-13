@@ -107,7 +107,7 @@ public class AnswerService {
         return this.answerRepository.findAll();
     }
 
-    public Qcm answersQcm(Long id, AnswerQcmDTO answers) throws ResourceNotFoundException {
+    public ScoreDTO answersQcm(Long id, AnswerQcmDTO answers) throws ResourceNotFoundException {
         Qcm qcm = this.qcmRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Qcmid= "+id+" not not found"));
         Student student = this.studentRepository.findById(answers.getStudentId()).orElseThrow(() -> new ResourceNotFoundException("Student id not found"));
 
@@ -142,11 +142,10 @@ public class AnswerService {
         this.studentTestRepository.saveAndFlush(studentTest);
         this.answerCommentService.createAll(answers.getAnswersComments());
         this.questionCommentService.createAll(answers.getQuestionsComments());
-        this.saveScore(qcm, student, answers);
-        return qcm;
+        return ScoreDTO.toScoreDTO(this.saveScore(qcm, student, answers));
     }
 
-    public void saveScore(Qcm qcm, Student student, AnswerQcmDTO answers){
+    public Score saveScore(Qcm qcm, Student student, AnswerQcmDTO answers){
         Integer totalValidAnswer = this.scoreService.getStudentTotalValidAnswer(answers);
         Score score = new Score();
         score.setQcm(qcm);
@@ -154,6 +153,7 @@ public class AnswerService {
         score.setTotalValidQuestion(totalValidAnswer);
         score.setTotalQuestion(qcm.getQuestions().size());
         this.scoreRepository.saveAndFlush(score);
+        return score;
     }
 
 
@@ -167,6 +167,11 @@ public class AnswerService {
         if (answer == null){
             return false;
         }
+        System.out.println(String.format("questionId=%d, answerId=%d, matched=%s",
+                answer.getQuestion().getId(),
+                questionAnswerDTO.getQuestionId(),
+                answer.getQuestion().getId() != questionAnswerDTO.getQuestionId()
+        ));
         if (answer.getQuestion().getId() != questionAnswerDTO.getQuestionId()){
             return false;
         }

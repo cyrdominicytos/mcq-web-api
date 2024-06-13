@@ -369,7 +369,7 @@ public class QcmController {
     }
 
     @GetMapping("/statistics/{id}")
-    public ResponseEntity<QcmStatDTO> getStatistic(@PathVariable Long id){
+    public ResponseEntity<QcmAllStatDTO> getStatistic(@PathVariable Long id){
         return  ResponseEntity.status(HttpStatus.OK).body(this.scoreService.getQcmStats(id));
     }
 

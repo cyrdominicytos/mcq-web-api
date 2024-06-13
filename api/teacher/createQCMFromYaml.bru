@@ -1,0 +1,83 @@
+meta {
+  name: createQCMFromYaml
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{HOST}}/qcm/createQCMFromYaml
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": """
+                          questions:
+                            - title: "Quelle est la capitale de la France ?"
+                              active: true
+                              delay: 30
+                              complexity: 1
+                              answers:
+                                - title: "Paris"
+                                  active: true
+                                  valid: true
+                                - title: "Londres"
+                                  active: true
+                                  valid: false
+                                - title: "Berlin"
+                                  active: true
+                                  valid: false
+                                - title: "Madrid"
+                                  active: true
+                                  valid: false
+                            - title: "Quelle est la plus grande planète du système solaire ?"
+                              active: true
+                              delay: 45
+                              complexity: 2
+                              answers:
+                                - title: "Terre"
+                                  active: true
+                                  valid: false
+                                - title: "Mars"
+                                  active: true
+                                  valid: false
+                                - title: "Jupiter"
+                                  active: true
+                                  valid: true
+                                - title: "Saturne"
+                                  active: true
+                                  valid: false
+                            - title: "Quelle est la formule chimique de l'eau ?"
+                              active: true
+                              delay: 15
+                              complexity: 1
+                              answers:
+                                - title: "H2O"
+                                  active: true
+                                  valid: true
+                                - title: "CO2"
+                                  active: true
+                                  valid: false
+                                - title: "O2"
+                                  active: true
+                                  valid: false
+                                - title: "H2SO4"
+                                  active: true
+                                  valid: false
+                            """
+    ,
+    "dto": {
+      "levelId": 1,
+      "teacherId": 1,
+      "limitQuestion": 0,
+      "delay": 1200,
+      "title": "TEST",
+      "complexity": 5,
+      "openStartDate": "2024-05-28T06:44:21.635Z",
+      "closeStartDate": "2024-05-28T06:44:21.635Z",
+      "active": true,
+      "randomActive": true
+    }
+  }
+}

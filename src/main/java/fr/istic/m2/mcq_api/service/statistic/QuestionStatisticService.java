@@ -1,7 +1,9 @@
 package fr.istic.m2.mcq_api.service.statistic;
 
 import fr.istic.m2.mcq_api.domain.*;
+import fr.istic.m2.mcq_api.dto.AnswerStat;
 import fr.istic.m2.mcq_api.dto.AnswerStatDTO;
+import fr.istic.m2.mcq_api.dto.QuestionStatDTO;
 import fr.istic.m2.mcq_api.dto.UnAnswerQuestionDTO;
 import fr.istic.m2.mcq_api.repository.QcmRepository;
 import fr.istic.m2.mcq_api.repository.StudentTestAnswerRepository;
@@ -62,6 +64,7 @@ public class QuestionStatisticService {
     public List<UnAnswerQuestionDTO> unAnswerQuestionsStats(Qcm qcm){
 
         List<StudentTest> studentTests =  qcm.getStudentTestList();
+        Integer totalTest = studentTests.size();
         List<UnAnswerQuestionDTO> answerQuestionDTOList = new ArrayList<>();
         List<Question> questions = qcm.getQuestions();
         for (Question question: questions){
@@ -77,6 +80,7 @@ public class QuestionStatisticService {
                     count++;
                 }
             }
+            unAnswerQuestionDTO.setTotalTest(totalTest);
             unAnswerQuestionDTO.setCount(count);
             answerQuestionDTOList.add(unAnswerQuestionDTO);
         }
@@ -93,5 +97,42 @@ public class QuestionStatisticService {
             }
         }
         return false;
+    }
+
+
+    public List<QuestionStatDTO> getQuestionsStatsByQcm(Qcm qcm){
+        List<QuestionStatDTO> questionStatDTOS = new ArrayList<>();
+        List<UnAnswerQuestionDTO> unAnswerQuestionDTOList = this.unAnswerQuestionsStats(qcm);
+        List<Question> questions = qcm.getQuestions();
+
+        // Fill questions with stats
+        for (Question question : questions) {
+            QuestionStatDTO questionStatDTO = new QuestionStatDTO();
+            questionStatDTO.setQuestion(question);
+
+            List<AnswerStatDTO> answerStatDTOS = this.getQuestionStats(question.getId());
+            List<Answer> answers = question.getAnswers();
+            List<AnswerStat> answerStats = new ArrayList<>();
+            for (UnAnswerQuestionDTO unAnswerQuestionDTO : unAnswerQuestionDTOList) {
+                if (unAnswerQuestionDTO.getQuestionId() == question.getId()){
+                    questionStatDTO.setUnAnswerQuestionDTO(unAnswerQuestionDTO);
+                }
+            }
+
+            // Fill question's answers with stats
+            for (Answer answer : answers) {
+                AnswerStat answerStat = new AnswerStat();
+                for (AnswerStatDTO answerStatDTO : answerStatDTOS) {
+                    if (answer.getId() == answerStatDTO.getAnswerId()){
+                        answerStat.setAnswerStatDTO(answerStatDTO);
+                        answerStat.setAnswer(answer);
+                    }
+                }
+                answerStats.add(answerStat);
+            }
+            questionStatDTO.setAnswerStats(answerStats);
+            questionStatDTOS.add(questionStatDTO);
+        }
+        return questionStatDTOS;
     }
 }

@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface LevelRepository extends JpaRepository<Level, Long> {
-    // You can define additional methods here if needed
+    public Level findOneByClassOfStudyAndFieldOfStudy(String classOfStudy, String fieldOfStudy);
 }

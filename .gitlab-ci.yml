@@ -21,7 +21,7 @@ deploy:
         echo "Pulling latest changes from Git" &&
         git pull &&
         echo "Stopping and removing existing Docker containers" &&
-        docker-compose down --remove-orphans &&
+        docker-compose down --remove-orphans &&  echo "Deleting old images" && docker rmi $(docker images -a -q)
         echo "Building and starting Docker containers" &&
         docker-compose up --build -d
       '
